@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Created by Kirill Danilov-->
 
@@ -21,19 +20,23 @@
 <script src="js/prettify.js"></script>
 
 <script language="JavaScript">
-    function computeMonthAnnuity(amount, rate, months, isRounded) {
+    function computeMonthAnnuity( amount, rate, months, isRounded )
+    {
         var monthRate = rate / 12;
-        var annuity = amount * ( monthRate / ( 1 - Math.pow(1 + monthRate, -months) ) );
-        if(isRounded) {
-            annuity = Math.round(annuity);
+        var annuity = amount * ( monthRate / ( 1 - Math.pow( 1 + monthRate, -months ) ) );
+        if( isRounded )
+        {
+            annuity = Math.round( annuity );
         }
-        else {
-            annuity = Math.round(annuity * 100) / 100;
+        else
+        {
+            annuity = Math.round( annuity * 100 ) / 100;
         }
         return annuity;
     }
 
-    function createInstalment(amount, annuity, rate, loanStartDate, firstPaymentDate, months, periodsPercentOnly) {
+    function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly )
+    {
         var instalment = [];
         var millisInDay = 1000 * 60 * 60 * 24;
         var curAmount = amount;
@@ -44,111 +47,120 @@
         var curNewPaymentDate = firstPaymentDate;
         var curPeriod;
         var curRow;
-        for(var i = 0; curAmount > 0; i++) {
+        for( var i = 0; curAmount > 0; i++ )
+        {
             curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
-            curPercent = Math.round(curAmount * curPeriod * rate / 365 * 100) / 100;
+            curPercent = Math.round( curAmount * curPeriod * rate / 365 * 100 ) / 100;
 
-            if(i >= periodsPercentOnly) {
-                curLoan = Math.round(( annuity - curPercent ) * 100) / 100;
+            if( i >= periodsPercentOnly )
+            {
+                curLoan = Math.round( ( annuity - curPercent ) * 100 ) / 100;
             }
-            else {
+            else
+            {
                 curLoan = 0;
             }
-            if(curAmount - curLoan < 0) {
+            if( curAmount - curLoan < 0 )
+            {
                 curLoan = curAmount;
             }
-            curAmount = Math.round(( curAmount - curLoan ) * 100) / 100;
+            curAmount = Math.round( ( curAmount - curLoan ) * 100 ) / 100;
 
 
             curRow =
             {
                 row: i + 1,
-                date: new Date(curNewPaymentDate.getTime()),
-                annuity: getFormattedSum(curPercent + curLoan),
-                percent: getFormattedSum(curPercent),
-                loan: getFormattedSum(curLoan),
-                remainLoan: getFormattedSum(curAmount)
+                date: new Date( curNewPaymentDate.getTime() ),
+                annuity: getFormattedSum( curPercent + curLoan ),
+                percent: getFormattedSum( curPercent ),
+                loan: getFormattedSum( curLoan ),
+                remainLoan: getFormattedSum( curAmount )
             };
-            instalment.push(curRow);
+            instalment.push( curRow );
 
-            curPaymentDate = new Date(curNewPaymentDate.getTime());
-            curNewPaymentDate.setMonth(curNewPaymentDate.getMonth() + 1);
+            curPaymentDate = new Date( curNewPaymentDate.getTime() );
+            curNewPaymentDate.setMonth( curNewPaymentDate.getMonth() + 1 );
         }
 
-        if(curAmount > 0) {
+        if( curAmount > 0 )
+        {
             curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
-            curPercent = Math.round(curAmount * curPeriod * rate / 365 * 100) / 100;
+            curPercent = Math.round( curAmount * curPeriod * rate / 365 * 100 ) / 100;
             curLoan = curAmount;
-            annuity = curPercent + curLoan;
             curAmount = curAmount - curLoan;
 
             curRow =
             {
                 row: i + 1,
-                date: new Date(curNewPaymentDate.getTime()),
-                annuity: getFormattedSum(curPercent + curLoan),
-                percent: getFormattedSum(curPercent),
-                loan: getFormattedSum(curLoan),
-                remainLoan: getFormattedSum(curAmount)
+                date: new Date( curNewPaymentDate.getTime() ),
+                annuity: getFormattedSum( curPercent + curLoan ),
+                percent: getFormattedSum( curPercent ),
+                loan: getFormattedSum( curLoan ),
+                remainLoan: getFormattedSum( curAmount )
             };
-            instalment.push(curRow);
+            instalment.push( curRow );
         }
 
         return instalment;
     }
 
-    function computeAndShow() {
-        var amount = document.getElementById("amount").value.replace(/ /g, '');
-        var rate = document.getElementById("rate").value;
-        if(rate.indexOf(",") != -1) {
-            rate = rate.replace(",", ".");
+    function computeAndShow()
+    {
+        var amount = document.getElementById( "amount" ).value.replace( / /g, '' );
+        var rate = document.getElementById( "rate" ).value;
+        if( rate.indexOf( "," ) != -1 )
+        {
+            rate = rate.replace( ",", "." );
         }
-        var months = document.getElementById("months").value;
+        var months = document.getElementById( "months" ).value;
         var normalRate = rate > 1 ? rate / 100 : rate;
 
-        var loanStartDate = getNormalDateStr(document.getElementById("loanStartDate").value);
-        var firstPaymentDate = getNormalDateStr(document.getElementById("firstPaymentDate").value);
+        var loanStartDate = getNormalDateStr( document.getElementById( "loanStartDate" ).value );
+        var firstPaymentDate = getNormalDateStr( document.getElementById( "firstPaymentDate" ).value );
 
-        var isRounded = document.getElementById("isRoundedAnnuity").checked;
-        var periodsPercentOnly = document.getElementById("periodsPercentOnly").value;
-        var annuity = computeMonthAnnuity(amount, normalRate, months, isRounded);
+        var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
+        var periodsPercentOnly = document.getElementById( "periodsPercentOnly" ).value;
+        var annuity = computeMonthAnnuity( amount, normalRate, months, isRounded );
 
-        document.getElementById("annuity").innerHTML = getFormattedSum(annuity);
-        var instalment = createInstalment(amount, annuity, normalRate, loanStartDate, firstPaymentDate, months, periodsPercentOnly);
+        document.getElementById( "annuity" ).innerHTML = getFormattedSum( annuity );
+        var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly );
 
-        var table = document.getElementById("instalmentTable");
+        var table = document.getElementById( "instalmentTable" );
         var tBodies = table.tBodies;
-        for(var j = 0; j < tBodies.length; j++) {
-            table.removeChild(tBodies[0]);
+        for( var j = 0; j < tBodies.length; j++ )
+        {
+            table.removeChild( tBodies[0] );
         }
-        var tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-        var rowsCount = tbody.rows.length;
+        var tbody = document.createElement( "tbody" );
+        table.appendChild( tbody );
         var tr;
         var row;
 
-        for(var i = 0; i < instalment.length; i++) {
-            tr = document.createElement("tr");
+        for( var i = 0; i < instalment.length; i++ )
+        {
+            tr = document.createElement( "tr" );
 
             row = instalment[i];
-            tr.insertCell(0).appendChild(document.createTextNode(row.row));
-            tr.insertCell(1).appendChild(document.createTextNode(getFormattedDate(row.date)));
-            tr.insertCell(2).appendChild(document.createTextNode(row.annuity));
-            tr.insertCell(3).appendChild(document.createTextNode(row.percent));
-            tr.insertCell(4).appendChild(document.createTextNode(row.loan));
-            tr.insertCell(5).appendChild(document.createTextNode(row.remainLoan));
-            tbody.appendChild(tr);
+            tr.insertCell( 0 ).appendChild( document.createTextNode( row.row ) );
+            tr.insertCell( 1 ).appendChild( document.createTextNode( getFormattedDate( row.date ) ) );
+            tr.insertCell( 2 ).appendChild( document.createTextNode( row.annuity ) );
+            tr.insertCell( 3 ).appendChild( document.createTextNode( row.percent ) );
+            tr.insertCell( 4 ).appendChild( document.createTextNode( row.loan ) );
+            tr.insertCell( 5 ).appendChild( document.createTextNode( row.remainLoan ) );
+            tbody.appendChild( tr );
         }
     }
 
-    function getNormalDateStr(dateStr) {
-        var dateNormal = dateStr.split('.');
+    function getNormalDateStr( dateStr )
+    {
+        var dateNormal = dateStr.split( '.' );
         //noinspection UnnecessaryLocalVariableJS
-        var dateOut = new Date(dateNormal[2], dateNormal[1] - 1, dateNormal[0]);
+        var dateOut = new Date( dateNormal[2], dateNormal[1] - 1, dateNormal[0] );
         return dateOut;
     }
 
-    function getFormattedDate(date) {
+    function getFormattedDate( date )
+    {
         var year = date.getFullYear();
         var month = (1 + date.getMonth()).toString();
         month = month.length > 1 ? month : '0' + month;
@@ -157,53 +169,57 @@
         return day + '.' + month + '.' + year;
     }
 
-    function getFormattedSum(sum) {
+    function getFormattedSum( sum )
+    {
         var sumStr = sum.toString();
-        if(sumStr.indexOf('.') == -1) {
+        if( sumStr.indexOf( '.' ) == -1 )
+        {
             return sumStr + ".00";
         }
-        var integer = sumStr.substring(0, sumStr.indexOf('.'));
-        var fract = sumStr.substring(sumStr.indexOf('.') + 1);
-        while(fract.length < 2) {
+        var integer = sumStr.substring( 0, sumStr.indexOf( '.' ) );
+        var fract = sumStr.substring( sumStr.indexOf( '.' ) + 1 );
+        while( fract.length < 2 )
+        {
             fract += '0';
         }
-        fract = fract.substring(0, 2);
+        fract = fract.substring( 0, 2 );
         return integer + '.' + fract;
     }
 
-    function setPaymentStartDate() {
-        var loanStartDate = getNormalDateStr(document.getElementById("loanStartDate").value);
-        loanStartDate.setMonth(loanStartDate.getMonth() + 1);
-        document.getElementById("firstPaymentDate").value = getFormattedDate(loanStartDate);
-        document.getElementById("dp2").setAttribute("data-date", getFormattedDate(loanStartDate) );
-        $('#dp2').datepicker('update', getFormattedDate(loanStartDate));
-//        document.getElementById("dp2").getAttribute("data-date").nodeValue = getFormattedDate(loanStartDate);
-//        document.getElementById("dp2").getAttribute("data-date").textContent = getFormattedDate(loanStartDate);
+    function setPaymentStartDate()
+    {
+        var loanStartDate = getNormalDateStr( document.getElementById( "loanStartDate" ).value );
+        loanStartDate.setMonth( loanStartDate.getMonth() + 1 );
+        document.getElementById( "firstPaymentDate" ).value = getFormattedDate( loanStartDate );
+        document.getElementById( "dp2" ).setAttribute( "data-date", getFormattedDate( loanStartDate ) );
+        $( '#dp2' ).datepicker( 'update', getFormattedDate( loanStartDate ) );
     }
 
 </script>
 
-<div class="col-lg-2">
+<div class="col-lg-1">
     <label for="amount">
         Сумма:
     </label>
+    <br/>
+    <br/>
     <input id="amount" type="text" value="3000000" class="form-control"/>
 </div>
-<div class="col-lg-2">
+<div class="col-lg-1">
     <label for="rate">
-        Годовая процентная ставка:
+        Годовая ставка, %:
     </label>
     <input id="rate" type="text" value="25" class="form-control"/>
 </div>
-<div class="col-lg-2">
+<div class="col-lg-1">
     <label for="months">
         Количество месяцев:
     </label>
     <input id="months" type="number" value="60" class="form-control"/>
 </div>
-<div class="col-lg-2">
+<div class="col-lg-1">
     <label for="loanStartDate">
-        Дата получения кредита:
+        Дата выдачи кредита:
     </label>
 
     <div class="input-append date" id="dp1" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
@@ -211,17 +227,18 @@
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
-        $(function() {
-            $('#dp1').datepicker({
+        $( function ()
+        {
+            $( '#dp1' ).datepicker( {
                 autoclose: true,
                 language: "ru",
                 weekStart: 1
-            });
-        });
+            } );
+        } );
     </script>
 </div>
 
-<div class="col-lg-2">
+<div class="col-lg-1">
     <label for="firstPaymentDate">
         Дата начала платежей:
     </label>
@@ -231,15 +248,18 @@
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
-        $(function() {
-            $('#dp2').datepicker({
+        $( function ()
+        {
+            $( '#dp2' ).datepicker( {
                 autoclose: true,
                 language: "ru",
                 weekStart: 1
-            });
-        });
+            } );
+        } );
     </script>
 </div>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>
@@ -261,8 +281,8 @@
 <br/>
 <br/>
 
-<div class="col-lg-2">
-    <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-default">
+<div class="col-lg-4">
+    <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
 </div>
 <br/>
 <br/>

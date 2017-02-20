@@ -19,7 +19,7 @@
 <script src="js/bootstrap-datepicker.ru.js"></script>
 <script src="js/prettify.js"></script>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
     function computeMonthAnnuity( amount, rate, months, isRounded )
     {
         var monthRate = rate / 12;
@@ -50,7 +50,7 @@
         for( var i = 0; curAmount > 0; i++ )
         {
             curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
-            curPercent = Math.round( curAmount * curPeriod * rate / 365 * 100 ) / 100;
+            curPercent = calculatePercent( curAmount, rate, curPeriod );
 
             if( i >= periodsPercentOnly )
             {
@@ -85,7 +85,7 @@
         if( curAmount > 0 )
         {
             curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
-            curPercent = Math.round( curAmount * curPeriod * rate / 365 * 100 ) / 100;
+            curPercent = calculatePercent( curAmount, rate, curPeriod );
             curLoan = curAmount;
             curAmount = curAmount - curLoan;
 
@@ -102,6 +102,55 @@
         }
 
         return instalment;
+    }
+
+    //    Calculate percent for curAmount with rate as annual year rate and period in days
+    function calculatePercent( amount, rate, period )
+    {
+        return Math.round( amount * period * rate / 365 * 100 ) / 100;
+    }
+
+    function getNormalDateStr( dateStr )
+    {
+        var dateNormal = dateStr.split( '.' );
+        //noinspection UnnecessaryLocalVariableJS
+        var dateOut = new Date( dateNormal[2], dateNormal[1] - 1, dateNormal[0] );
+        return dateOut;
+    }
+
+    function getFormattedDate( date )
+    {
+        var year = date.getFullYear();
+        var month = (1 + date.getMonth()).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return day + '.' + month + '.' + year;
+    }
+
+    function getFormattedSum( sum )
+    {
+        var sumStr = sum.toString();
+        if( sumStr.indexOf( '.' ) == -1 )
+        {
+            return sumStr + ".00";
+        }
+        var integer = sumStr.substring( 0, sumStr.indexOf( '.' ) );
+        var fract = sumStr.substring( sumStr.indexOf( '.' ) + 1 );
+        while( fract.length < 2 )
+        {
+            fract += '0';
+        }
+        fract = fract.substring( 0, 2 );
+        return integer + '.' + fract;
+    }
+
+    function setPaymentStartDate()
+    {
+        var firstPaymentDate = getNormalDateStr( document.getElementById( "loanStartDate" ).value );
+        firstPaymentDate.setMonth( firstPaymentDate.getMonth() + 1 );
+        document.getElementById( "firstPaymentDate" ).value = getFormattedDate( firstPaymentDate );
+        $( '#dpfirstPaymentDate' ).datepicker( 'update', getFormattedDate( firstPaymentDate ) );
     }
 
     function computeAndShow()
@@ -149,53 +198,96 @@
             tr.insertCell( 5 ).appendChild( document.createTextNode( row.remainLoan ) );
             tbody.appendChild( tr );
         }
+
+        createDirectLink();
     }
 
-    function getNormalDateStr( dateStr )
+    function createDirectLink()
     {
-        var dateNormal = dateStr.split( '.' );
-        //noinspection UnnecessaryLocalVariableJS
-        var dateOut = new Date( dateNormal[2], dateNormal[1] - 1, dateNormal[0] );
-        return dateOut;
-    }
-
-    function getFormattedDate( date )
-    {
-        var year = date.getFullYear();
-        var month = (1 + date.getMonth()).toString();
-        month = month.length > 1 ? month : '0' + month;
-        var day = date.getDate().toString();
-        day = day.length > 1 ? day : '0' + day;
-        return day + '.' + month + '.' + year;
-    }
-
-    function getFormattedSum( sum )
-    {
-        var sumStr = sum.toString();
-        if( sumStr.indexOf( '.' ) == -1 )
+        var url = window.location.href;
+        if( url.indexOf('?') > 0 )
         {
-            return sumStr + ".00";
+            url = url.substring(0, url.indexOf('?'));
         }
-        var integer = sumStr.substring( 0, sumStr.indexOf( '.' ) );
-        var fract = sumStr.substring( sumStr.indexOf( '.' ) + 1 );
-        while( fract.length < 2 )
+        url = url + '?';
+        var inputs = document.getElementsByTagName("input");
+        for( var i = 0; i < inputs.length; i++ )
         {
-            fract += '0';
+            if( inputs[i].type != "button" && inputs[i].id.indexOf("Ex") === -1 )
+            {
+                var v;
+                if( inputs[i].type === "checkbox" )
+                {
+                    v = inputs[i].checked;
+                }
+                else
+                {
+                    v = inputs[i].value;
+                }
+                url = url + inputs[i].id + "=" + v + "&";
+            }
         }
-        fract = fract.substring( 0, 2 );
-        return integer + '.' + fract;
+        url = url.substr(0, url.length - 1);
+        document.getElementById("directLinkEx" ).value = url;
     }
 
-    function setPaymentStartDate()
+    function setGetParameters()
     {
-        var loanStartDate = getNormalDateStr( document.getElementById( "loanStartDate" ).value );
-        loanStartDate.setMonth( loanStartDate.getMonth() + 1 );
-        document.getElementById( "firstPaymentDate" ).value = getFormattedDate( loanStartDate );
-        document.getElementById( "dp2" ).setAttribute( "data-date", getFormattedDate( loanStartDate ) );
-        $( '#dp2' ).datepicker( 'update', getFormattedDate( loanStartDate ) );
+        var params = getSearchParameters();
+        var isSet = false;
+        for( var p in params )
+        {
+            if( params.hasOwnProperty(p) )
+            {
+                var e = document.getElementById(p);
+                e.value = params[p];
+                e.checked = params[p] === "true";
+                if( p.indexOf("Date") >= 0 )
+                {
+                    var dateStr = getNormalDateStr( e.value );
+                    var dateControl = $( "#dp" + p );
+                    dateControl.datepicker( {
+                                    autoclose: true,
+                                    language: "ru",
+                                    weekStart: 1
+                                } );
+                    dateControl.datepicker( 'update', getFormattedDate( dateStr ) );
+                }
+                isSet = true;
+            }
+        }
+        if( isSet )
+        {
+            computeAndShow();
+        }
+
     }
 
+    function getSearchParameters()
+    {
+        var prmstr = window.location.search.substr( 1 );
+        return prmstr != null && prmstr != "" ? transformToAssocArray( prmstr ) : {};
+    }
+
+    function transformToAssocArray( prmstr )
+    {
+        var params = {};
+        var prmarr = prmstr.split( "&" );
+        for( var i = 0; i < prmarr.length; i++ )
+        {
+            var tmparr = prmarr[i].split( "=" );
+            params[tmparr[0]] = tmparr[1];
+        }
+        return params;
+    }
 </script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+       setGetParameters();
+    }, false);
+</script>
+
 
 <div class="col-lg-1">
     <label for="amount">
@@ -222,14 +314,14 @@
         Дата выдачи кредита:
     </label>
 
-    <div class="input-append date" id="dp1" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
+    <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
         <input id="loanStartDate" type="text" value="30.01.2017" class="form-control" onchange="setPaymentStartDate()"/>
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
         $( function ()
         {
-            $( '#dp1' ).datepicker( {
+            $( '#dploanStartDate' ).datepicker( {
                 autoclose: true,
                 language: "ru",
                 weekStart: 1
@@ -243,14 +335,14 @@
         Дата начала платежей:
     </label>
 
-    <div class="input-append date" id="dp2" data-date="02.03.2017" data-date-format="dd.mm.yyyy">
+    <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017" data-date-format="dd.mm.yyyy">
         <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
         $( function ()
         {
-            $( '#dp2' ).datepicker( {
+            $( '#dpfirstPaymentDate' ).datepicker( {
                 autoclose: true,
                 language: "ru",
                 weekStart: 1
@@ -290,6 +382,27 @@
 
 <p>
 
+<div class="col-lg-6">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
+        </span>
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input id="directLinkEx" readonly="true" type="text" class="form-control" placeholder="Прямой линк...">
+    </div>
+</div>
+<script type="text/javascript">
+    function copyDirectLink()
+    {
+        document.getElementById("directLinkEx" ).select();
+        document.execCommand('copy');
+    }
+</script>
+<br/>
+<br/>
+<br/>
+
+
 <div class="col-lg-2">
     <table>
         <tr>
@@ -320,4 +433,5 @@
     </div>
 </div>
 </body>
+
 </html>

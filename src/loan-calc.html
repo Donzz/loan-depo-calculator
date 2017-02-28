@@ -12,32 +12,32 @@
 <body>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/third/jquery-3.1.1.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="js/bootstrap-datepicker.ru.js"></script>
-<script src="js/prettify.js"></script>
+<script src="js/third/bootstrap.min.js"></script>
+<script src="js/third/bootstrap-datepicker.js"></script>
+<script src="js/third/bootstrap-datepicker.ru.js"></script>
+<script src="js/third/prettify.js"></script>
 <script src="js/calcEffectivePercent.js"></script>
 <script src="js/calculation.js"></script>
 <script src="js/lookAndFeel.js"></script>
 
 <script type="text/javascript">
-    document.addEventListener( 'DOMContentLoaded', function ()
+    document.addEventListener( 'DOMContentLoaded', function()
     {
         setGetParameters();
     }, false );
 </script>
 
 
-<div class="col-lg-1">
+<div class="col-sm-1" style="width:10%">
     <label for="amount">
         Сумма:
     </label>
     <br/>
     <br/>
     <input id="amount" type="text" value="3 000 000" class="form-control"
-           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value.replace( / /g, '' ), 0, false)"/>
+           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value.replace( / /g, '' ), 0)"/>
 </div>
 <div class="col-lg-1">
     <label for="rate">
@@ -61,7 +61,7 @@
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
-        $( function ()
+        $( function()
         {
             $( '#dploanStartDate' ).datepicker( {
                 autoclose: true,
@@ -82,7 +82,7 @@
         <span class="add-on"></span>
     </div>
     <script type="text/javascript">
-        $( function ()
+        $( function()
         {
             $( '#dpfirstPaymentDate' ).datepicker( {
                 autoclose: true,
@@ -103,103 +103,112 @@
 <br/>
 <br/>
 <br/>
-
-<div class="col-lg-2">
-    <table class="table">
-        <thead>
-        <tr>
-            <th><b>Сумма</b></th>
-            <th><b>Дата</b></th>
-        </tr>
-        </thead>
-        <tbody id="erDyn">
-        </tbody>
-    </table>
-</div>
-
-<br/>
-<br/>
-<br/>
-<br/>
 <br/>
 <br/>
 
 <div class="col-lg-1">
-    <input id="addER" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение" class="btn btn-sm">
+    <input id="addER" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
+           class="btn btn-sm">
 </div>
 <br/>
 <br/>
-<br/>
+<table style="width:80%">
+    <tr>
+        <td>
+            <div class="col-lg-4">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><b>Сумма</b></th>
+                        <th><b>Дата</b></th>
+                    </tr>
+                    </thead>
+                    <tbody id="erDyn">
+                    </tbody>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br/>
+            <br/>
+            <br/>
 
-<div class="col-lg-4">
-    <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
-</div>
-<br/>
-<br/>
-<br/>
+            <div class="col-lg-4">
+                <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
+            </div>
+            <br/>
+            <br/>
+            <br/>
 
-<p>
+            <p>
 
-<div class="col-lg-6">
-    <div class="input-group">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
-        </span>
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <input id="directLinkEx" readonly="true" type="text" class="form-control" placeholder="Прямой линк...">
-    </div>
-</div>
-<script type="text/javascript">
-    function copyDirectLink()
-    {
-        document.getElementById( "directLinkEx" ).select();
-        document.execCommand( 'copy' );
-    }
-</script>
-<br/>
-<br/>
-<br/>
+            <div class="col-lg-7">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
+                    </span>
+                    <!--suppress HtmlFormInputWithoutLabel -->
+                    <input id="directLinkEx" readonly="true" type="text" class="form-control"
+                           placeholder="Прямой линк...">
+                </div>
+            </div>
+            <script type="text/javascript">
+                function copyDirectLink()
+                {
+                    document.getElementById( "directLinkEx" ).select();
+                    document.execCommand( 'copy' );
+                }
+            </script>
+            <br/>
+            <br/>
+            <br/>
 
 
-<div class="col-md-6">
-    <table class="table">
-        <tr>
-            <!--<td><b>Аннуитетный платеж:</b></td>-->
-            <td>
-                <div id="annuity"><b>Аннуитетный платеж: </b></div>
-            </td>
-            <!--<td><b>ПСК:</b></td>-->
-            <td>
-                <div id="fullCreditCost"><b>ПСК: </b></div>
-            </td>
-            <!--<td><b>Переплата:</b></td>-->
-            <td>
-                <div id="overpayment"><b>Переплата: </b></div>
-            </td>
-        </tr>
-    </table>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
+            <div class="col-md-7">
+                <table class="table">
+                    <tr>
+                        <!--<td><b>Аннуитетный платеж:</b></td>-->
+                        <td>
+                            <div id="annuity"><b>Аннуитетный платеж: </b></div>
+                        </td>
+                        <!--<td><b>ПСК:</b></td>-->
+                        <td>
+                            <div id="fullCreditCost"><b>ПСК: </b></div>
+                        </td>
+                        <!--<td><b>Переплата:</b></td>-->
+                        <td>
+                            <div id="overpayment"><b>Переплата: </b></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
 
-<div class="col-md-6">
-    <div class="table-responsive">
-        <table id="instalmentTable" class="table table-striped">
-            <thead>
-            <tr>
-                <th><b>#</b></th>
-                <th><b>Дата</b></th>
-                <th><b>Платеж</b></th>
-                <th><b>Проценты</b></th>
-                <th><b>Основной долг</b></th>
-                <th><b>Остаток долга</b></th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+            <div class="col-md-7">
+                <div class="table-responsive">
+                    <table id="instalmentTable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th><b>#</b></th>
+                            <th><b>Дата</b></th>
+                            <th><b>Платеж</b></th>
+                            <th><b>Проценты</b></th>
+                            <th><b>Основной долг</b></th>
+                            <th><b>Остаток долга</b></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </td>
+    <tr>
+</table>
+
 </body>
 
 </html>

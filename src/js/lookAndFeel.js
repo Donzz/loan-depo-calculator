@@ -16,27 +16,50 @@ function getFormattedDate( date )
     return day + '.' + month + '.' + year;
 }
 
-function getFormattedSum( sum, fractionalNumbers = 2, needFractional = true )
+function getFormattedSum( sum, fractionalNumbers = 2 )
 {
     var result;
     var sumStr = sum.toString();
     var integer;
-    if( sumStr.indexOf( '.' ) == -1 )
+    var fractDot = sumStr.indexOf( '.' );
+    if( fractDot == -1 )
     {
         integer = sumStr;
         sumStr = sumStr + '.';
+        fractDot = sumStr.indexOf( '.' );
     }
-    else if( sumStr.indexOf( '.' ) == 0 )
+    else if( fractDot == 0 )
     {
         integer = '0';
     }
     else
     {
-        integer = sumStr.substring( 0, sumStr.indexOf( '.' ) );
+        integer = sumStr.substring( 0, fractDot );
     }
-    needFractional = sum - integer === 0 ? needFractional : true;
+
+    for( var zeroI = 0; zeroI < integer.length - 1; zeroI++ )
+    {
+        if( integer.substr( zeroI, 1 ) != '0' )
+        {
+            break;
+        }
+    }
+
+    integer = integer.substring( zeroI );
+
+    var needFractional;
+    if( sum - integer === 0 )
+    {
+        needFractional = fractionalNumbers != 0;
+    }
+    else
+    {
+        needFractional = true;
+        fractionalNumbers = fractionalNumbers === 0 ? sumStr.substring( fractDot + 1 ).length : fractionalNumbers;
+    }
+
     integer = addThousandSpaces( integer );
-    var fract = sumStr.substring( sumStr.indexOf( '.' ) + 1 );
+    var fract = sumStr.substring( fractDot + 1 );
     while( fract.length < fractionalNumbers )
     {
         fract += '0';
@@ -219,21 +242,31 @@ function addEarlyRepaymentControls()
     var tbodyEP = document.getElementById( "erDyn" );
     var rowsAmount = tbodyEP.childNodes.length;
     var tr = document.createElement( "tr" );
-    var d = createERDiv();
 
-    var e = document.createElement( "input" );
+    var e = document.getElementById( "amount" ).cloneNode( true );
     e.id = "erSumDyn" + ( rowsAmount + 1 );
-    e.type = "text";
-    e.class = "form-control";
+    e.value = "";
     e.placeholder = "Сумма к погашению";
     e.onblur = function()
     {
-        document.getElementById( e.id ).value = getFormattedSum( document.getElementById( e.id ).value.replace( / /g, '' ), 0, false );
+        document.getElementById( e.id ).value = getFormattedSum( document.getElementById( e.id ).value.replace( / /g, '' ), 0 );
     };
 
-    d.appendChild( e );
-    tr.insertCell( 0 ).appendChild( d );
-    d.class = "col-lg-1";
+    tr.insertCell( 0 ).appendChild( e );
+
+    var e2 = $( "#dpfirstPaymentDate" ).clone();
+    var e2Node = e2.get( 0 );
+    e2Node.id = "dperDateDyn" + ( rowsAmount + 1 );
+    e2Node.placeholder = "Дата";
+    e2Node.childNodes.item( 1 ).id = "erDateDyn" + ( rowsAmount + 1 );
+
+    e2.datepicker( {
+        autoclose: true,
+        language: "ru",
+        weekStart: 1
+    } );
+
+    tr.insertCell( 1 ).appendChild( e2Node );
 
 //    tr.insertCell( 1 ).appendChild( document.createTextNode( getFormattedDate( row.date ) ) );
 

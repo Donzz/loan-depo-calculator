@@ -173,7 +173,7 @@ function setGetParameters()
         if( params.hasOwnProperty( p ) )
         {
             var e = document.getElementById( p );
-            e.value = params[p];
+            e.value = decodeURIComponent( params[p] );
             e.checked = params[p] === "true";
             if( p.indexOf( "Date" ) >= 0 )
             {
@@ -228,7 +228,7 @@ function addEarlyRepaymentControls()
     e.placeholder = "Сумма к погашению";
     e.onblur = function()
     {
-        document.getElementById(e.id).value = getFormattedSum(document.getElementById(e.id).value.replace( / /g, '' ), 0, false);
+        document.getElementById( e.id ).value = getFormattedSum( document.getElementById( e.id ).value.replace( / /g, '' ), 0, false );
     };
 
     d.appendChild( e );

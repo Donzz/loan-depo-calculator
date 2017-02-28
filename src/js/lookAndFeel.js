@@ -123,10 +123,13 @@ function computeAndShow()
         {
             break;
         }
-        er.push( {
-            sum: getNormalSum( erElSum.value ),
-            date: getNormalDate( document.getElementById( "dynErDate" + erI ).value )
-        } );
+        if( erElSum.value.length > 0 && erElSum.value != '0' )
+        {
+            er.push( {
+                sum: getNormalSum( erElSum.value ),
+                date: getNormalDate( document.getElementById( "dynErDate" + erI ).value )
+            } );
+        }
     }
     er.sort( function( a, b )
     {
@@ -224,25 +227,28 @@ function setGetParameters()
         if( params.hasOwnProperty( p ) )
         {
             var e = document.getElementById( p );
-            if( !e )
+            if( !e && p.indexOf( "dynEr" ) >= 0 )
             {
                 addEarlyRepaymentControls();
                 e = document.getElementById( p );
             }
-            e.value = decodeURIComponent( params[p] );
-            e.checked = params[p] === "true";
-            if( p.indexOf( "Date" ) >= 0 )
+            if( !e )
             {
-                var dateStr = getNormalDate( e.value );
-                var dateControl = $( "#dp" + p );
-                dateControl.datepicker( {
-                    autoclose: true,
-                    language: "ru",
-                    weekStart: 1
-                } );
-                dateControl.datepicker( 'update', getFormattedDate( dateStr ) );
+                e.value = decodeURIComponent( params[p] );
+                e.checked = params[p] === "true";
+                if( p.indexOf( "Date" ) >= 0 )
+                {
+                    var dateStr = getNormalDate( e.value );
+                    var dateControl = $( "#dp" + p );
+                    dateControl.datepicker( {
+                        autoclose: true,
+                        language: "ru",
+                        weekStart: 1
+                    } );
+                    dateControl.datepicker( 'update', getFormattedDate( dateStr ) );
+                }
+                isSet = true;
             }
-            isSet = true;
         }
     }
     if( isSet )

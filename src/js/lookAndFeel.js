@@ -6,6 +6,11 @@ function getNormalDate( dateStr )
     return dateOut;
 }
 
+function getNormalSum( sumStr )
+{
+    return sumStr.replace( / /g, '' );
+}
+
 function getFormattedDate( date )
 {
     var year = date.getFullYear();
@@ -20,6 +25,10 @@ function getFormattedSum( sum, fractionalNumbers = 2 )
 {
     var result;
     var sumStr = sum.toString();
+    if( sumStr.length == 0 )
+    {
+        sumStr = '0';
+    }
     var integer;
     var fractDot = sumStr.indexOf( '.' );
     if( fractDot == -1 )
@@ -90,7 +99,7 @@ function setPaymentStartDate()
 
 function computeAndShow()
 {
-    var amount = document.getElementById( "amount" ).value.replace( / /g, '' );
+    var amount = getNormalSum( document.getElementById( "amount" ).value );
     var rate = document.getElementById( "rate" ).value;
     if( rate.indexOf( "," ) != -1 )
     {
@@ -105,10 +114,29 @@ function computeAndShow()
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
     var isRounded = false;
     var periodsPercentOnly = document.getElementById( "periodsPercentOnly" ).value;
+
+    var er = [];
+    for( var erI = 1; ; erI++ )
+    {
+        var erElSum = document.getElementById( "dynErSum" + erI );
+        if( !erElSum )
+        {
+            break;
+        }
+        er.push( {
+            sum: getNormalSum( erElSum.value ),
+            date: getNormalDate( document.getElementById( "dynErDate" + erI ).value )
+        } );
+    }
+    er.sort( function( a, b )
+    {
+        return a.date.getTime() - b.date.getTime();
+    } );
+
     var annuity = computeMonthAnnuity( amount, normalRate, months, isRounded );
 
     document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
-    var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly );
+    var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly, er );
 
     var table = document.getElementById( "instalmentTable" );
     var tBodies = table.tBodies;
@@ -196,6 +224,11 @@ function setGetParameters()
         if( params.hasOwnProperty( p ) )
         {
             var e = document.getElementById( p );
+            if( !e )
+            {
+                addEarlyRepaymentControls();
+                e = document.getElementById( p );
+            }
             e.value = decodeURIComponent( params[p] );
             e.checked = params[p] === "true";
             if( p.indexOf( "Date" ) >= 0 )
@@ -240,11 +273,11 @@ function transformToAssocArray( prmstr )
 function addEarlyRepaymentControls()
 {
     var tbodyEP = document.getElementById( "erDyn" );
-    var rowsAmount = tbodyEP.childNodes.length;
+    var rowNumber = tbodyEP.childNodes.length;
     var tr = document.createElement( "tr" );
 
     var e = document.getElementById( "amount" ).cloneNode( true );
-    e.id = "erSumDyn" + ( rowsAmount + 1 );
+    e.id = "dynErSum" + ( rowNumber );
     e.value = "";
     e.placeholder = "Сумма к погашению";
     e.onblur = function()
@@ -256,9 +289,9 @@ function addEarlyRepaymentControls()
 
     var e2 = $( "#dpfirstPaymentDate" ).clone();
     var e2Node = e2.get( 0 );
-    e2Node.id = "dperDateDyn" + ( rowsAmount + 1 );
+    e2Node.id = "dpdynErDate" + ( rowNumber );
     e2Node.placeholder = "Дата";
-    e2Node.childNodes.item( 1 ).id = "erDateDyn" + ( rowsAmount + 1 );
+    e2Node.childNodes.item( 1 ).id = "dynErDate" + ( rowNumber );
 
     e2.datepicker( {
         autoclose: true,

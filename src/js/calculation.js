@@ -13,31 +13,54 @@ function computeMonthAnnuity( amount, rate, months, isRounded )
     return annuity;
 }
 
-function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly )
+function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly, er )
 {
     var instalment = [];
     var millisInDay = 1000 * 60 * 60 * 24;
     var curAmount = amount;
+    var curAnnuity;
     var curPercent;
     var curLoan;
     var curPaymentDate = loanStartDate;
+    var curNextPaymentDate = firstPaymentDate;
     //noinspection UnnecessaryLocalVariableJS
-    var curNewPaymentDate = firstPaymentDate;
+    var curNewPaymentDate;
     var curPeriod;
     var curRow;
+    var curEr = er.slice();
+    var isEr;
     for( var i = 0; curAmount > 0; i++ )
     {
-        curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
-        curPercent = calculatePercent( curAmount, rate, curPeriod );
-
-        if( i >= periodsPercentOnly )
+        if( curEr.length > 0 && curEr[0].date.getTime() <= curNextPaymentDate.getTime() )
         {
-            curLoan = Math.round( ( annuity - curPercent ) * 100 ) / 100;
+            isEr = true;
+            curNewPaymentDate = curEr[0].date;
         }
         else
         {
-            curLoan = 0;
+            isEr = false;
+            curNewPaymentDate = curNextPaymentDate;
         }
+        curPeriod = ( curNewPaymentDate.getTime() - curPaymentDate.getTime() ) / millisInDay;
+        curPercent = calculatePercent( curAmount, rate, curPeriod );
+
+        if( isEr )
+        {
+            curAnnuity = curEr[0].sum;
+            i--;
+        }
+        else
+        {
+            if( i >= periodsPercentOnly )
+            {
+                curAnnuity = annuity;
+            }
+            else
+            {
+                curAnnuity = curPercent;
+            }
+        }
+        curLoan = Math.round( ( curAnnuity - curPercent ) * 100 ) / 100;
         if( curAmount - curLoan < 0 )
         {
             curLoan = curAmount;
@@ -46,7 +69,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
 
         curRow =
         {
-            row: i + 1,
+            row: isEr ? '-' : i + 1,
             date: new Date( curNewPaymentDate.getTime() ),
             annuity: curPercent + curLoan,
             percent: curPercent,
@@ -56,7 +79,14 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         instalment.push( curRow );
 
         curPaymentDate = new Date( curNewPaymentDate.getTime() );
-        curNewPaymentDate.setMonth( curNewPaymentDate.getMonth() + 1 );
+        if( isEr )
+        {
+            curEr.splice( 0, 1 );
+        }
+        else
+        {
+            curNextPaymentDate.setMonth( curNextPaymentDate.getMonth() + 1 );
+        }
     }
 
     if( curAmount > 0 )

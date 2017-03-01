@@ -8,7 +8,7 @@ function getNormalDate( dateStr )
 
 function getNormalSum( sumStr )
 {
-    return sumStr.replace( / /g, '' );
+    return parseFloat( sumStr.replace( / /g, '' ) );
 }
 
 function getFormattedDate( date )
@@ -232,7 +232,7 @@ function setGetParameters()
                 addEarlyRepaymentControls();
                 e = document.getElementById( p );
             }
-            if( !e )
+            if( e != null )
             {
                 e.value = decodeURIComponent( params[p] );
                 e.checked = params[p] === "true";
@@ -278,12 +278,13 @@ function transformToAssocArray( prmstr )
 
 function addEarlyRepaymentControls()
 {
-    var tbodyEP = document.getElementById( "erDyn" );
-    var rowNumber = tbodyEP.childNodes.length;
+    var tbodyEr = document.getElementById( "dynEr" );
+    var rowNumber = tbodyEr.childNodes.length;
     var tr = document.createElement( "tr" );
+    tr.id = "dynErTr" + rowNumber;
 
     var e = document.getElementById( "amount" ).cloneNode( true );
-    e.id = "dynErSum" + ( rowNumber );
+    e.id = "dynErSum" + rowNumber;
     e.value = "";
     e.placeholder = "Сумма к погашению";
     e.onblur = function()
@@ -295,7 +296,7 @@ function addEarlyRepaymentControls()
 
     var e2 = $( "#dpfirstPaymentDate" ).clone();
     var e2Node = e2.get( 0 );
-    e2Node.id = "dpdynErDate" + ( rowNumber );
+    e2Node.id = "dpdynErDate" + rowNumber;
     e2Node.placeholder = "Дата";
     e2Node.childNodes.item( 1 ).id = "dynErDate" + ( rowNumber );
 
@@ -307,19 +308,36 @@ function addEarlyRepaymentControls()
 
     tr.insertCell( 1 ).appendChild( e2Node );
 
-//    tr.insertCell( 1 ).appendChild( document.createTextNode( getFormattedDate( row.date ) ) );
+    var eButton =  document.createElement( "button" );
+    eButton.id = "deleteEr" + rowNumber;
+    eButton.onclick = function() { deleteEarlyRepaymentControls( eButton.id ) };
+    var eSpan = document.createElement( "span" );
+    eSpan.className = "glyphicon glyphicon-remove-circle";
+    eButton.appendChild( eSpan );
 
-    tbodyEP.appendChild( tr );
+    tr.insertCell( 2 ).appendChild( eButton );
 
-//    <input id="amount" type="text" value="3 000 000" class="form-control"
-//               onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value.replace( / /g, '' ), 0, false)"/>
-
+    tbodyEr.appendChild( tr );
 }
 
-function createERDiv()
+function deleteEarlyRepaymentControls( buttonId )
 {
-    var d = document.createElement( "div" );
-    d.class = "col-lg-1";
-    return d;
-}
+    var rowNumber = parseInt( buttonId.substr( "deleteEr".length ) );
+    var tbodyEr = document.getElementById( "dynEr" );
 
+    tbodyEr.removeChild( document.getElementById( "dynErTr" + rowNumber ) );
+
+    for( var erI = rowNumber + 1; ; erI++ )
+    {
+        var erElSum = document.getElementById( "dynErSum" + erI );
+        if( !erElSum )
+        {
+            break;
+        }
+        erElSum.id = "dynErSum" + ( erI - 1 );
+        document.getElementById( "dpdynErDate" + erI ).id = "dpdynErDate" + ( erI - 1 );
+        document.getElementById( "dynErDate" + erI ).id = "dynErDate" + ( erI - 1 );
+        document.getElementById( "dynErTr" + erI ).id = "dynErTr" + ( erI - 1 );
+        document.getElementById( "deleteEr" + erI ).id = "deleteEr" + ( erI - 1 );
+    }
+}

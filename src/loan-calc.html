@@ -57,8 +57,10 @@
     </label>
 
     <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
-        <input id="loanStartDate" type="text" value="30.01.2017" class="form-control" onchange="setPaymentStartDate()"/>
-        <span class="add-on"></span>
+        <input id="loanStartDate" type="text" value="30.01.2017" class="form-control" onchange="setPaymentStartDate()">
+            <span class="add-on"></span>
+        </intpu>
+
     </div>
     <script type="text/javascript">
         $( function()
@@ -107,7 +109,7 @@
 <br/>
 
 <div class="col-lg-1">
-    <input id="addER" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
+    <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
            class="btn btn-sm">
 </div>
 <br/>
@@ -123,7 +125,7 @@
                         <th><b>Дата</b></th>
                     </tr>
                     </thead>
-                    <tbody id="erDyn">
+                    <tbody id="dynEr">
                     </tbody>
                 </table>
             </div>

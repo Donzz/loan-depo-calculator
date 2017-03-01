@@ -58,7 +58,7 @@
 
     <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
         <input id="loanStartDate" type="text" value="30.01.2017" class="form-control" onchange="setPaymentStartDate()">
-            <span class="add-on"></span>
+        <span class="add-on"></span>
         </intpu>
 
     </div>
@@ -108,9 +108,17 @@
 <br/>
 <br/>
 
-<div class="col-lg-1">
+<div class="col-lg-2">
     <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
            class="btn btn-sm">
+</div>
+<div class="col-lg-1">
+    <div class="radio">
+        <label><input id="erDurationRadio" type="radio" name="erRadio" checked="true">Уменьшение срока</label>
+    </div>
+    <div class="radio">
+        <label><input id="erAnnuityRadio" type="radio" name="erRadio">Уменьшение платежа</label>
+    </div>
 </div>
 <br/>
 <br/>

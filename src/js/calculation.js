@@ -1,4 +1,4 @@
-function computeMonthAnnuity( amount, rate, months, isRounded )
+function calculateMonthAnnuity( amount, rate, months, isRounded )
 {
     var monthRate = rate / 12;
     var annuity = amount * ( monthRate / ( 1 - Math.pow( 1 + monthRate, -months ) ) );
@@ -13,12 +13,13 @@ function computeMonthAnnuity( amount, rate, months, isRounded )
     return annuity;
 }
 
-function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly, er )
+function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly, er, isErDuration, months )
 {
     var instalment = [];
     var millisInDay = 1000 * 60 * 60 * 24;
     var curAmount = amount;
-    var curAnnuity;
+    var curAnnuity = annuity;
+    var curPayment;
     var curPercent;
     var curLoan;
     var lastPaymentDate = new Date( loanStartDate.getTime() );
@@ -48,12 +49,12 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             if( curEr[0].date.getTime() === nextPaymentDate.getTime() )
             {
-                curAnnuity = annuity + curEr[0].sum;
+                curPayment = curAnnuity + curEr[0].sum;
                 rowNumber = i + 1;
             }
             else
             {
-                curAnnuity = curEr[0].sum;
+                curPayment = curEr[0].sum;
                 i--;
                 rowNumber = '-';
             }
@@ -62,15 +63,15 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             if( i >= periodsPercentOnly )
             {
-                curAnnuity = annuity;
+                curPayment = curAnnuity;
             }
             else
             {
-                curAnnuity = curPercent;
+                curPayment = curPercent;
             }
             rowNumber = i + 1;
         }
-        curLoan = Math.round( ( curAnnuity - curPercent ) * 100 ) / 100;
+        curLoan = Math.round( ( curPayment - curPercent ) * 100 ) / 100;
         if( curAmount - curLoan < 0 )
         {
             curLoan = curAmount;
@@ -95,6 +96,10 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         }
         if( isEr )
         {
+            if( !isErDuration )
+            {
+                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i - 1, false );
+            }
             curEr.splice( 0, 1 );
         }
     }

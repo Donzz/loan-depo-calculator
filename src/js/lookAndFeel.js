@@ -114,6 +114,7 @@ function computeAndShow()
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
     var isRounded = false;
     var periodsPercentOnly = document.getElementById( "periodsPercentOnly" ).value;
+    var isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
 
     var er = [];
     for( var erI = 1; ; erI++ )
@@ -136,10 +137,10 @@ function computeAndShow()
         return a.date.getTime() - b.date.getTime();
     } );
 
-    var annuity = computeMonthAnnuity( amount, normalRate, months, isRounded );
+    var annuity = calculateMonthAnnuity( amount, normalRate, months, isRounded );
 
     document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
-    var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly, er );
+    var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly, er, isErDuration, months );
 
     var table = document.getElementById( "instalmentTable" );
     var tBodies = table.tBodies;
@@ -203,7 +204,7 @@ function createDirectLink()
         if( inputs[i].type != "button" && inputs[i].id.indexOf( "Ex" ) === -1 )
         {
             var v;
-            if( inputs[i].type === "checkbox" )
+            if( inputs[i].type === "checkbox" || inputs[i].type === "radio" )
             {
                 v = inputs[i].checked;
             }

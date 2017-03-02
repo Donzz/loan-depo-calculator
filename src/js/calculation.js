@@ -30,7 +30,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
     var rowNumber;
     var curEr = er.slice();
     var isEr;
-    for( var i = 0; curAmount > 0; i++ )
+    for( var i = 1; curAmount > 0; i++ )
     {
         if( curEr.length > 0 && curEr[0].date.getTime() <= nextPaymentDate.getTime() )
         {
@@ -50,7 +50,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
             if( curEr[0].date.getTime() === nextPaymentDate.getTime() )
             {
                 curPayment = curAnnuity + curEr[0].sum;
-                rowNumber = i + 1;
+                rowNumber = i;
             }
             else
             {
@@ -61,15 +61,22 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         }
         else
         {
-            if( i >= periodsPercentOnly )
+            if( i > periodsPercentOnly )
             {
-                curPayment = curAnnuity;
+                if( i - periodsPercentOnly === months )
+                {
+                    curPayment = curAmount + curPercent;
+                }
+                else
+                {
+                    curPayment = curAnnuity;
+                }
             }
             else
             {
                 curPayment = curPercent;
             }
-            rowNumber = i + 1;
+            rowNumber = i;
         }
         curLoan = Math.round( ( curPayment - curPercent ) * 100 ) / 100;
         if( curAmount - curLoan < 0 )

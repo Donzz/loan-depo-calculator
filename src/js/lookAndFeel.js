@@ -69,6 +69,11 @@ function getFormattedSum( sum, fractionalNumbers = 2 )
 
     integer = addThousandSpaces( integer );
     var fract = sumStr.substring( fractDot + 1 );
+    var divider = Math.pow( 10, fract.length - fractionalNumbers );
+    if( divider > 1 )
+    {
+        fract = '' + Math.round( parseInt( fract ) / divider );
+    }
     while( fract.length < fractionalNumbers )
     {
         fract += '0';
@@ -105,7 +110,7 @@ function computeAndShow()
     {
         rate = rate.replace( ",", "." );
     }
-    var months = document.getElementById( "months" ).value;
+    var months = getNormalSum( document.getElementById( "months" ).value );
     var normalRate = rate > 1 ? rate / 100 : rate;
 
     var loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
@@ -113,7 +118,7 @@ function computeAndShow()
 
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
     var isRounded = false;
-    var periodsPercentOnly = document.getElementById( "periodsPercentOnly" ).value;
+    var periodsPercentOnly = getNormalSum( document.getElementById( "periodsPercentOnly" ).value );
     var isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
 
     var er = [];

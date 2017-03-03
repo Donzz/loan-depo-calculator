@@ -8,7 +8,7 @@ function getNormalDate( dateStr )
 
 function getNormalSum( sumStr )
 {
-    return parseFloat( sumStr.replace( / /g, '' ) );
+    return parseFloat( sumStr.replace( / /g, '' ).replace( ',', '.' ) );
 }
 
 function getFormattedDate( date )
@@ -105,11 +105,7 @@ function setPaymentStartDate()
 function computeAndShow()
 {
     var amount = getNormalSum( document.getElementById( "amount" ).value );
-    var rate = document.getElementById( "rate" ).value;
-    if( rate.indexOf( "," ) != -1 )
-    {
-        rate = rate.replace( ",", "." );
-    }
+    var rate = getNormalSum( document.getElementById( "rate" ).value );
     var months = getNormalSum( document.getElementById( "months" ).value );
     var normalRate = rate > 1 ? rate / 100 : rate;
 
@@ -162,7 +158,7 @@ function computeAndShow()
     var pskData = [
         {
             Date: loanStartDate,
-            Flow: amount
+            Flow: -amount
         }
     ];
 
@@ -189,7 +185,7 @@ function computeAndShow()
     overpayment -= amount;
     document.getElementById( "overpayment" ).innerHTML = "\<b>Переплата: \</b>" + getFormattedSum( overpayment );
 
-    var fullCreditCost = psk( pskData, 30 );
+    var fullCreditCost = calcEffectivePercent( pskData, 30 );
     document.getElementById( "fullCreditCost" ).innerHTML = "\<b>ПСК: \</b>" + getFormattedSum( fullCreditCost, 3 ) + "%";
 
     createDirectLink();

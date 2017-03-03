@@ -89,7 +89,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             row: rowNumber,
             date: new Date( curPaymentDate.getTime() ),
-            annuity: curLoan + curPercent,
+            annuity: Math.round( ( curLoan + curPercent ) * 100 ) / 100,
             percent: curPercent,
             loan: curLoan,
             remainLoan: curAmount

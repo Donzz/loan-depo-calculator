@@ -6,8 +6,8 @@ function calcEffectivePercent( pskData, daysInPeriod )
     var sums = [];
     for( var d in pskData )
     {
-        dates.push( pskData[d].Date );
-        sums.push( pskData[d].Flow );
+        dates.push( pskData[d].date );
+        sums.push( pskData[d].flow );
     }
     var m = dates.length; // число платежей
 

@@ -1,3 +1,7 @@
+//Created by Kirill Danilov
+//2017
+//Contact the author if want to use
+
 function calculateMonthAnnuity( amount, rate, months, isRounded )
 {
     var monthRate = rate / 12;

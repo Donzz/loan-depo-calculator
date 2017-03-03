@@ -1,9 +1,11 @@
+<!--Created by Kirill Danilov-->
+<!--2017-->
+<!--Contact the author if want to use-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Created by Kirill Danilov-->
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,7 +39,7 @@
     <br/>
     <br/>
     <input id="amount" type="text" value="3 000 000" class="form-control"
-           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value.replace( / /g, '' ), 0)"/>
+           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
 </div>
 <div class="col-lg-1">
     <label for="rate">
@@ -103,6 +105,16 @@
 <br/>
 <br/>
 <br/>
+<br/>
+<br/>
+<div class="col-sm-1">
+    <label for="insurance">
+        Страховка:
+    </label>
+    <br/>
+    <input id="insurance" type="text" value="0" class="form-control"
+           onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)"/>
+</div>
 <br/>
 <br/>
 <br/>

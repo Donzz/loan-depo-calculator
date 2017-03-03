@@ -1,3 +1,7 @@
+//Created by Kirill Danilov
+//2017
+//Contact the author if want to use
+
 function getNormalDate( dateStr )
 {
     var dateNormal = dateStr.split( '.' );
@@ -24,7 +28,8 @@ function getFormattedDate( date )
 function getFormattedSum( sum, fractionalNumbers = 2 )
 {
     var result;
-    var sumStr = sum.toString();
+    var sumNormal = getNormalSum( '' + sum );
+    var sumStr = sumNormal.toString();
     if( sumStr.length == 0 )
     {
         sumStr = '0';
@@ -57,7 +62,7 @@ function getFormattedSum( sum, fractionalNumbers = 2 )
     integer = integer.substring( zeroI );
 
     var needFractional;
-    if( sum - integer === 0 )
+    if( sumNormal - integer === 0 )
     {
         needFractional = fractionalNumbers != 0;
     }
@@ -105,6 +110,8 @@ function setPaymentStartDate()
 function computeAndShow()
 {
     var amount = getNormalSum( document.getElementById( "amount" ).value );
+    var insurance = getNormalSum( document.getElementById( "insurance" ).value );
+    amount += insurance;
     var rate = getNormalSum( document.getElementById( "rate" ).value );
     var months = getNormalSum( document.getElementById( "months" ).value );
     var normalRate = rate > 1 ? rate / 100 : rate;
@@ -157,10 +164,18 @@ function computeAndShow()
 
     var pskData = [
         {
-            Date: loanStartDate,
-            Flow: -amount
+            date: loanStartDate,
+            flow: -amount
         }
     ];
+
+    if( insurance > 0 )
+    {
+        pskData.push( {
+            date: loanStartDate,
+            flow: insurance
+        } );
+    }
 
     for( var i = 0; i < instalment.length; i++ )
     {
@@ -177,12 +192,12 @@ function computeAndShow()
 
         overpayment += row.annuity;
         pskData.push( {
-            Date: row.date,
-            Flow: row.annuity
+            date: row.date,
+            flow: row.annuity
         } );
     }
 
-    overpayment -= amount;
+    overpayment = overpayment - amount + insurance;
     document.getElementById( "overpayment" ).innerHTML = "\<b>Переплата: \</b>" + getFormattedSum( overpayment );
 
     var fullCreditCost = calcEffectivePercent( pskData, 30 );

@@ -25,9 +25,13 @@ function getFormattedDate( date )
     return day + '.' + month + '.' + year;
 }
 
-function getFormattedSum( sum, fractionalNumbers = 2 )
+function getFormattedSum( sum, fractionalNumbers )
 {
     var result;
+    if( !fractionalNumbers )
+    {
+        fractionalNumbers = 2;
+    }
     var sumNormal = getNormalSum( '' + sum );
     var sumStr = sumNormal.toString();
     if( sumStr.length == 0 )

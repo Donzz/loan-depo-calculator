@@ -36,51 +36,41 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
     var isEr;
     for( var i = 1; curAmount > 0; i++ )
     {
-        if( curEr.length > 0 && curEr[0].date.getTime() <= nextPaymentDate.getTime() )
+        curPayment = 0;
+        isEr = false;
+        curPaymentDate = nextPaymentDate;
+        if( curEr.length > 0 && curEr[0].date.getTime() <= curPaymentDate.getTime() )
         {
             isEr = true;
             curPaymentDate = curEr[0].date;
-        }
-        else
-        {
-            isEr = false;
-            curPaymentDate = nextPaymentDate;
+            curPayment += curEr[0].sum;
         }
         curPeriod = ( curPaymentDate.getTime() - lastPaymentDate.getTime() ) / millisInDay;
-        curPercent = calculatePercent( curAmount, rate, curPeriod );
+        curPercent = calculatePercentForPeriod( curAmount, rate, curPeriod );
 
-        if( isEr )
-        {
-            if( curEr[0].date.getTime() === nextPaymentDate.getTime() )
-            {
-                curPayment = curAnnuity + curEr[0].sum;
-                rowNumber = i;
-            }
-            else
-            {
-                curPayment = curEr[0].sum;
-                i--;
-                rowNumber = '-';
-            }
-        }
-        else
+        if( curPaymentDate.getTime() === nextPaymentDate.getTime() )
         {
             if( i > periodsPercentOnly )
             {
                 if( i - periodsPercentOnly === months )
                 {
-                    curPayment = curAmount + curPercent;
+                    curPayment += curAmount + curPercent;
                 }
                 else
                 {
-                    curPayment = curAnnuity;
+                    curPayment += curAnnuity;
                 }
             }
             else
             {
-                curPayment = curPercent;
+                curPayment += curPercent;
             }
             rowNumber = i;
+        }
+        else
+        {
+            i--;
+            rowNumber = '-';
         }
         curLoan = Math.round( ( curPayment - curPercent ) * 100 ) / 100;
         if( curAmount - curLoan < 0 )
@@ -109,7 +99,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             if( !isErDuration )
             {
-                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i - 1, false );
+                curAnnuity = calculateMonthAnnuity( curAmount, curRate, months - i - 1, false );
             }
             curEr.splice( 0, 1 );
         }
@@ -119,7 +109,12 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
 }
 
 //    Calculate percent for curAmount with rate as annual year rate and period in days
-function calculatePercent( amount, rate, period )
+function calculatePercentForPeriod( amount, rate, period )
 {
-    return Math.round( amount * period * rate / 365 * 100 ) / 100;
+    return Math.round( calculatePercent( amount, rate ) * period * 100 / 365 ) / 100;
+}
+
+function calculatePercent( amount, rate )
+{
+    return Math.round( amount * rate * 100 ) / 100;
 }

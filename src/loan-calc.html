@@ -111,9 +111,27 @@
         Страховка:
     </label>
     <br/>
+    <br/>
     <input id="insurance" type="text" value="0" class="form-control"
            onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)"/>
 </div>
+<div class="col-sm-1"></div>
+<div class="col-sm-1">
+    <label for="interestReduceSumPercent">
+        Процент за понижение %:
+    </label>
+    <br/>
+    <input id="interestReduceSumPercent" type="text" class="form-control" value="0"/>
+</div>
+<div class="col-sm-1">
+    <label for="interestReduceDiff">
+        На сколько понижение %:
+    </label>
+    <br/>
+    <input id="interestReduceDiff" type="text" class="form-control" value="0"/>
+</div>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>

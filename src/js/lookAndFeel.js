@@ -28,7 +28,7 @@ function getFormattedDate( date )
 function getFormattedSum( sum, fractionalNumbers )
 {
     var result;
-    if( !fractionalNumbers )
+    if( typeof fractionalNumbers === "undefined" )
     {
         fractionalNumbers = 2;
     }
@@ -118,7 +118,7 @@ function computeAndShow()
     amount += insurance;
     var rate = getNormalSum( document.getElementById( "rate" ).value );
     var months = getNormalSum( document.getElementById( "months" ).value );
-    var normalRate = rate > 1 ? rate / 100 : rate;
+    var normalRate = rate / 100;
 
     var loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
     var firstPaymentDate = getNormalDate( document.getElementById( "firstPaymentDate" ).value );

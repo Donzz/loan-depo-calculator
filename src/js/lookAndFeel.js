@@ -114,11 +114,22 @@ function setPaymentStartDate()
 function computeAndShow()
 {
     var amount = getNormalSum( document.getElementById( "amount" ).value );
+
+    var months = getNormalSum( document.getElementById( "months" ).value );
+    var rate = getNormalSum( document.getElementById( "rate" ).value );
+    var normalRate = rate / 100;
+
+    var interestReduceSumPercent = getNormalSum( document.getElementById( "interestReduceSumPercent" ).value );
+    var normalInterestReduceSumPercent = interestReduceSumPercent / 100;
+    var interestReduceSum = calculatePercent( amount, normalInterestReduceSumPercent );
+
+    var interestReduceDiff = getNormalSum( document.getElementById( "interestReduceDiff" ).value );
+    //noinspection UnnecessaryLocalVariableJS
+    var normalInterestReduceDiff = interestReduceDiff / 100;
+    normalRate -= normalInterestReduceDiff;
+
     var insurance = getNormalSum( document.getElementById( "insurance" ).value );
     amount += insurance;
-    var rate = getNormalSum( document.getElementById( "rate" ).value );
-    var months = getNormalSum( document.getElementById( "months" ).value );
-    var normalRate = rate / 100;
 
     var loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
     var firstPaymentDate = getNormalDate( document.getElementById( "firstPaymentDate" ).value );
@@ -181,6 +192,14 @@ function computeAndShow()
         } );
     }
 
+    if( interestReduceSum > 0 )
+    {
+        pskData.push( {
+            date: loanStartDate,
+            flow: interestReduceSum
+        } );
+    }
+
     for( var i = 0; i < instalment.length; i++ )
     {
         tr = document.createElement( "tr" );
@@ -201,7 +220,7 @@ function computeAndShow()
         } );
     }
 
-    overpayment = overpayment - amount + insurance;
+    overpayment = overpayment - amount + insurance + interestReduceSum;
     document.getElementById( "overpayment" ).innerHTML = "\<b>Переплата: \</b>" + getFormattedSum( overpayment );
 
     var fullCreditCost = calcEffectivePercent( pskData, 30 );

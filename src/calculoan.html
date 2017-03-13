@@ -45,7 +45,8 @@
     <label for="rate">
         Годовая ставка, %:
     </label>
-    <input id="rate" type="text" value="25" class="form-control"/>
+    <input id="rate" type="text" value="25" class="form-control"
+           onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
 </div>
 <div class="col-lg-1">
     <label for="months">
@@ -108,7 +109,7 @@
 <br/>
 <div class="col-sm-1">
     <label for="insurance">
-        Страховка:
+        Страховка, %:
     </label>
     <br/>
     <br/>
@@ -121,14 +122,16 @@
         Платеж за снижение, %:
     </label>
     <br/>
-    <input id="interestReduceSumPercent" type="text" class="form-control" value="0"/>
+    <input id="interestReduceSumPercent" type="text" value="0" class="form-control"
+           onblur="document.getElementById('interestReduceSumPercent').value = getFormattedSum(document.getElementById('interestReduceSumPercent').value, 0)"/>
 </div>
 <div class="col-sm-1">
     <label for="interestReduceDiff">
         Снижение ставки, %:
     </label>
     <br/>
-    <input id="interestReduceDiff" type="text" class="form-control" value="0"/>
+    <input id="interestReduceDiff" type="text" class="form-control" value="0"
+           onblur="document.getElementById('interestReduceDiff').value = getFormattedSum(document.getElementById('interestReduceDiff').value, 0)"/>
 </div>
 <br/>
 <br/>

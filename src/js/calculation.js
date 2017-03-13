@@ -5,7 +5,15 @@
 function calculateMonthAnnuity( amount, rate, months, isRounded )
 {
     var monthRate = rate / 12;
-    var annuity = amount * ( monthRate / ( 1 - Math.pow( 1 + monthRate, -months ) ) );
+    var annuity;
+    if( monthRate > 0 )
+    {
+        annuity = amount * ( monthRate / ( 1 - Math.pow( 1 + monthRate, -months ) ) );
+    }
+    else
+    {
+        annuity = amount / months;
+    }
     if( isRounded )
     {
         annuity = Math.round( annuity );

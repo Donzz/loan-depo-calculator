@@ -33,6 +33,10 @@ function getFormattedSum( sum, fractionalNumbers )
         fractionalNumbers = 2;
     }
     var sumNormal = getNormalSum( '' + sum );
+    if( isNaN( sumNormal ) )
+    {
+        sumNormal = 0;
+    }
     var sumStr = sumNormal.toString();
     if( sumStr.length == 0 )
     {
@@ -113,6 +117,8 @@ function setPaymentStartDate()
 
 function computeAndShow()
 {
+    var percentLimit = 99;
+
     var amount = getNormalSum( document.getElementById( "amount" ).value );
 
     var months = getNormalSum( document.getElementById( "months" ).value );
@@ -120,16 +126,32 @@ function computeAndShow()
     var normalRate = rate / 100;
 
     var interestReduceSumPercent = getNormalSum( document.getElementById( "interestReduceSumPercent" ).value );
-    var normalInterestReduceSumPercent = interestReduceSumPercent / 100;
-    var interestReduceSum = calculatePercent( amount, normalInterestReduceSumPercent );
+    var interestReduceSum;
+    if( interestReduceSumPercent > percentLimit )
+    {
+        interestReduceSum = interestReduceSumPercent;
+    }
+    else
+    {
+        interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
+    }
 
     var interestReduceDiff = getNormalSum( document.getElementById( "interestReduceDiff" ).value );
     //noinspection UnnecessaryLocalVariableJS
     var normalInterestReduceDiff = interestReduceDiff / 100;
     normalRate -= normalInterestReduceDiff;
 
-    var insurance = getNormalSum( document.getElementById( "insurance" ).value );
-    amount += insurance;
+    var insurancePercent = getNormalSum( document.getElementById( "insurance" ).value );
+    var insuranceSum;
+    if( insurancePercent > percentLimit )
+    {
+        insuranceSum = insurancePercent;
+    }
+    else
+    {
+        insuranceSum = calculatePercent( amount, insurancePercent / 100 );
+    }
+    amount += insuranceSum;
 
     var loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
     var firstPaymentDate = getNormalDate( document.getElementById( "firstPaymentDate" ).value );
@@ -184,11 +206,11 @@ function computeAndShow()
         }
     ];
 
-    if( insurance > 0 )
+    if( insuranceSum > 0 )
     {
         pskData.push( {
             date: loanStartDate,
-            flow: insurance
+            flow: insuranceSum
         } );
     }
 
@@ -220,7 +242,7 @@ function computeAndShow()
         } );
     }
 
-    overpayment = overpayment - amount + insurance + interestReduceSum;
+    overpayment = overpayment - amount + insuranceSum + interestReduceSum;
     document.getElementById( "overpayment" ).innerHTML = "\<b>Переплата: \</b>" + getFormattedSum( overpayment );
 
     var fullCreditCost = calcEffectivePercent( pskData, 30 );

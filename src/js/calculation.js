@@ -107,7 +107,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             if( !isErDuration )
             {
-                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i - 1, false );
+                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i, false );
             }
             curEr.splice( 0, 1 );
         }

@@ -14,7 +14,7 @@ function calcEffectivePercent( pskData, daysInPeriod )
     //Задаем базвый период bp
     var bp = daysInPeriod;
     //Считаем число базовых периодов в году:
-    var cbp = Math.round( 365 / bp );
+    var cbp = Math.floor( 365 / bp );
 
     //заполним массив с количеством дней с даты выдачи до даты к-го платежа
     var days = [];

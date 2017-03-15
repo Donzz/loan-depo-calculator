@@ -56,6 +56,12 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         curPeriod = ( curPaymentDate.getTime() - lastPaymentDate.getTime() ) / millisInDay;
         curPercent = calculatePercentForPeriod( curAmount, rate, curPeriod );
 
+        if( curPercent > curAnnuity )
+        {
+            //for credits with long duration it can happens because of different amount of days in months
+            curPercent = curAnnuity;
+        }
+
         if( curPaymentDate.getTime() === nextPaymentDate.getTime() )
         {
             if( i > periodsPercentOnly )

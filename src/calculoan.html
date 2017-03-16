@@ -5,12 +5,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/datepicker.css" rel="stylesheet">
     <link href="css/prettify.css" rel="stylesheet">
+    <link href="css/calculoan.css" rel="stylesheet">
 <body>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -32,161 +33,162 @@
     }, false );
 </script>
 
+<div class="container">
+<div class="header"></div>
+<div class="content">
 
-<div class="col-sm-1">
-    <label for="amount">
-        Сумма:
-    </label>
-    <br/>
-    <br/>
-    <input id="amount" type="text" value="3 000 000" class="form-control"
-           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
-</div>
-<div class="col-lg-1">
-    <label for="rate">
-        Годовая ставка, %:
-    </label>
-    <input id="rate" type="text" value="25" class="form-control"
-           onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
-</div>
-<div class="col-lg-1">
-    <label for="months">
-        Количество месяцев:
-    </label>
-    <input id="months" type="number" value="60" class="form-control"/>
-</div>
-<div class="col-lg-1">
-    <label for="loanStartDate">
-        Дата выдачи кредита:
-    </label>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-2">
+            <label class="col-sm-5 control-label small" for="amount">Сумма, руб.</label>
 
-    <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
-        <input id="loanStartDate" type="text" value="30.01.2017" class="form-control" onchange="setPaymentStartDate()">
-        <span class="add-on"></span>
-
-    </div>
-    <script type="text/javascript">
-        $( function()
-        {
-            $( '#dploanStartDate' ).datepicker( {
-                autoclose: true,
-                language: "ru",
-                weekStart: 1
-            } );
-        } );
-    </script>
-</div>
-
-<div class="col-lg-1">
-    <label for="firstPaymentDate">
-        Дата начала платежей:
-    </label>
-
-    <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017" data-date-format="dd.mm.yyyy">
-        <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
-        <span class="add-on"></span>
-    </div>
-    <script type="text/javascript">
-        $( function()
-        {
-            $( '#dpfirstPaymentDate' ).datepicker( {
-                autoclose: true,
-                language: "ru",
-                weekStart: 1
-            } );
-        } );
-    </script>
-</div>
-<div class="col-lg-1">
-    <label for="periodsPercentOnly">
-        Платежи только %:
-    </label>
-    <input id="periodsPercentOnly" type="number" min="0" max="1000" value="1" class="form-control">
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<div class="col-sm-1">
-    <label for="insurance">
-        Страховка, %:
-    </label>
-    <br/>
-    <br/>
-    <input id="insurance" type="text" value="0" class="form-control"
-           onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)"/>
-</div>
-<div class="col-sm-1"></div>
-<div class="col-sm-1">
-    <label for="interestReduceSumPercent">
-        Платеж за снижение, %:
-    </label>
-    <br/>
-    <input id="interestReduceSumPercent" type="text" value="0" class="form-control"
-           onblur="document.getElementById('interestReduceSumPercent').value = getFormattedSum(document.getElementById('interestReduceSumPercent').value, 0)"/>
-</div>
-<div class="col-sm-1">
-    <label for="interestReduceDiff">
-        Снижение ставки, %:
-    </label>
-    <br/>
-    <input id="interestReduceDiff" type="text" class="form-control" value="0"
-           onblur="document.getElementById('interestReduceDiff').value = getFormattedSum(document.getElementById('interestReduceDiff').value, 0)"/>
-</div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-<div class="col-lg-2">
-    <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
-           class="btn btn-sm">
-</div>
-<div class="col-lg-1">
-    <div class="radio">
-        <label><input id="erDurationRadio" type="radio" name="erRadio" checked="true">Уменьшение срока</label>
-    </div>
-    <div class="radio">
-        <label><input id="erAnnuityRadio" type="radio" name="erRadio">Уменьшение платежа</label>
-    </div>
-</div>
-<br/>
-<br/>
-<table style="width:80%">
-    <tr>
-        <td>
-            <div class="col-lg-4">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th><b>Сумма</b></th>
-                        <th><b>Дата</b></th>
-                    </tr>
-                    </thead>
-                    <tbody id="dynEr">
-                    </tbody>
-                </table>
+            <div class="col-md-7">
+                <input id="amount" type="text" value="3 000 000" class="form-control"
+                       onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <br/>
-            <br/>
-            <br/>
+        </div>
+        <div class="col-md-2">
+            <label class="col-md-4 control-label small" for="rate">Годовая ставка, %</label>
 
-            <div class="col-lg-4">
-                <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
+            <div class="col-md-8">
+                <input id="rate" type="text" value="25" class="form-control"
+                       onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
             </div>
-            <br/>
-            <br/>
-            <br/>
+        </div>
+        <div class="col-md-2">
+            <label class="col-md-4 control-label small" for="months">Срок, мес.</label>
 
-            <p>
+            <div class="col-md-8">
+                <input id="months" type="number" value="60" class="form-control"/>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="col-md-4 control-label small" for="loanStartDate">Дата выдачи кредита</label>
 
+            <div class="col-md-8">
+                <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
+                    <input id="loanStartDate" type="text" value="30.01.2017" class="form-control"
+                           onchange="setPaymentStartDate()">
+                    <span class="add-on"></span>
+
+                </div>
+                <script type="text/javascript">
+                    $( function()
+                    {
+                        $( '#dploanStartDate' ).datepicker( {
+                            autoclose: true,
+                            language: "ru",
+                            weekStart: 1
+                        } );
+                    } );
+                </script>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="col-md-4 control-label small" for="firstPaymentDate">Дата начала платежей</label>
+
+            <div class="col-md-8">
+                <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017" data-date-format="dd.mm.yyyy">
+                    <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
+                    <span class="add-on"></span>
+                </div>
+                <script type="text/javascript">
+                    $( function()
+                    {
+                        $( '#dpfirstPaymentDate' ).datepicker( {
+                            autoclose: true,
+                            language: "ru",
+                            weekStart: 1
+                        } );
+                    } );
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group">
+
+        <div class="col-md-3">
+            <label for="periodsPercentOnly">
+                Платежи только %:
+            </label>
+            <input id="periodsPercentOnly" type="number" min="0" max="1000" value="1" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label for="insurance">
+                Страховка, %:
+            </label>
+            <input id="insurance" type="text" value="0" class="form-control"
+                   onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)"/>
+        </div>
+        <div class="col-md-3">
+            <label for="interestReduceSumPercent">
+                Платеж за снижение, %:
+            </label>
+            <input id="interestReduceSumPercent" type="text" value="0" class="form-control"
+                   onblur="document.getElementById('interestReduceSumPercent').value = getFormattedSum(document.getElementById('interestReduceSumPercent').value, 0)"/>
+        </div>
+        <div class="col-md-3">
+            <label for="interestReduceDiff">
+                Снижение ставки, %:
+            </label>
+            <input id="interestReduceDiff" type="text" class="form-control" value="0"
+                   onblur="document.getElementById('interestReduceDiff').value = getFormattedSum(document.getElementById('interestReduceDiff').value, 0)"/>
+        </div>
+    </div>
+</div>
+
+<div class="row"><br/></div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-3">
+            <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
+                   class="btn btn-sm">
+        </div>
+        <div class="col-md-2">
+            <div class="radio">
+                <label><input id="erDurationRadio" type="radio" name="erRadio" checked="true">Уменьшение срока</label>
+            </div>
+            <div class="radio">
+                <label><input id="erAnnuityRadio" type="radio" name="erRadio">Уменьшение платежа</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row"></div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-5">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th><b>Сумма</b></th>
+                    <th><b>Дата</b></th>
+                </tr>
+                </thead>
+                <tbody id="dynEr">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-lg-4">
+            <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+
+<div class="row">
+    <div class="form-group">
             <div class="col-lg-7">
                 <div class="input-group">
                     <span class="input-group-btn">
@@ -204,54 +206,59 @@
                     document.execCommand( 'copy' );
                 }
             </script>
-            <br/>
-            <br/>
-            <br/>
+    </div>
+</div>
 
+<div class="row"></div>
 
-            <div class="col-md-7">
-                <table class="table">
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <!--<td><b>Аннуитетный платеж:</b></td>-->
+                    <td>
+                        <div id="annuity"><b>Аннуитетный платеж: </b></div>
+                    </td>
+                    <!--<td><b>ПСК:</b></td>-->
+                    <td>
+                        <div id="fullCreditCost" class="lead"><b>ПСК: </b></div>
+                    </td>
+                    <!--<td><b>Переплата:</b></td>-->
+                    <td>
+                        <div id="overpayment"><b>Переплата: </b></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="instalmentTable" class="table table-striped">
+                    <thead>
                     <tr>
-                        <!--<td><b>Аннуитетный платеж:</b></td>-->
-                        <td>
-                            <div id="annuity"><b>Аннуитетный платеж: </b></div>
-                        </td>
-                        <!--<td><b>ПСК:</b></td>-->
-                        <td>
-                            <div id="fullCreditCost" class="lead"><b>ПСК: </b></div>
-                        </td>
-                        <!--<td><b>Переплата:</b></td>-->
-                        <td>
-                            <div id="overpayment"><b>Переплата: </b></div>
-                        </td>
+                        <th><b>#</b></th>
+                        <th><b>Дата</b></th>
+                        <th><b>Платеж</b></th>
+                        <th><b>Проценты</b></th>
+                        <th><b>Основной долг</b></th>
+                        <th><b>Остаток долга</b></th>
                     </tr>
+                    </thead>
                 </table>
             </div>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-7">
-                <div class="table-responsive">
-                    <table id="instalmentTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th><b>#</b></th>
-                            <th><b>Дата</b></th>
-                            <th><b>Платеж</b></th>
-                            <th><b>Проценты</b></th>
-                            <th><b>Основной долг</b></th>
-                            <th><b>Остаток долга</b></th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        </td>
-    <tr>
-</table>
-
+</div>
+</div>
 </body>
 
 </html>

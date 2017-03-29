@@ -2,7 +2,8 @@
 <!--2017-->
 <!--Contact the author if want to use-->
 <!DOCTYPE html>
-<html lang="en">
+<!--suppress ALL -->
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
@@ -34,78 +35,80 @@
 </script>
 
 <div class="container">
-<div class="header"></div>
+<div class="row">
+    <div class="header">
+        <h2>Кредитный калькулятор</h2>
+    </div>
+</div>
 <div class="content">
 
-<div class="row">
-    <div class="form-group">
-        <div class="col-md-2">
-            <label class="col-sm-5 control-label small" for="amount">Сумма, руб.</label>
+<div class="container">
+    <div class="row" style="margin-bottom: 3em">
 
-            <div class="col-md-7">
+    </div>
+    <form class="form-inline">
+        <div class="row">
+            <div class="col-md-4">
+                <label class="control-label small" for="amount">Сумма, руб.</label>
+
                 <input id="amount" type="text" value="3 000 000" class="form-control"
                        onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
             </div>
-        </div>
-        <div class="col-md-2">
-            <label class="col-md-4 control-label small" for="rate">Годовая ставка, %</label>
-
-            <div class="col-md-8">
-                <input id="rate" type="text" value="25" class="form-control"
+            <div class="col-md-4">
+                <label class="control-label small col-md-2" for="rate">Годовая ставка, %</label>
+                <input id="rate" type="text" value="25" class="form-control  col-md-2"
                        onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
             </div>
-        </div>
-        <div class="col-md-2">
-            <label class="col-md-4 control-label small" for="months">Срок, мес.</label>
+            <div class="col-md-4">
+                <label class="control-label small" for="months">Срок, мес.</label>
 
-            <div class="col-md-8">
                 <input id="months" type="number" value="60" class="form-control"/>
             </div>
         </div>
-        <div class="col-md-2">
-            <label class="col-md-4 control-label small" for="loanStartDate">Дата выдачи кредита</label>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-2">
+                    <label class="control-label small" for="loanStartDate">Дата выдачи кредита</label>
 
-            <div class="col-md-8">
-                <div class="input-append date" id="dploanStartDate" data-date="30.01.2017" data-date-format="dd.mm.yyyy">
-                    <input id="loanStartDate" type="text" value="30.01.2017" class="form-control"
-                           onchange="setPaymentStartDate()">
-                    <span class="add-on"></span>
+                    <div class="input-append date" id="dploanStartDate" data-date="30.01.2017"
+                         data-date-format="dd.mm.yyyy">
+                        <input id="loanStartDate" type="text" value="30.01.2017" class="form-control"
+                               onchange="setPaymentStartDate()">
+                        <span class="add-on"></span>
 
-                </div>
-                <script type="text/javascript">
-                    $( function()
-                    {
-                        $( '#dploanStartDate' ).datepicker( {
-                            autoclose: true,
-                            language: "ru",
-                            weekStart: 1
+                    </div>
+                    <script type="text/javascript">
+                        $( function()
+                        {
+                            $( '#dploanStartDate' ).datepicker( {
+                                autoclose: true,
+                                language: "ru",
+                                weekStart: 1
+                            } );
                         } );
-                    } );
-                </script>
+                    </script>
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label small" for="firstPaymentDate">Дата начала платежей</label>
+
+                    <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017"
+                         data-date-format="dd.mm.yyyy">
+                        <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
+                        <span class="add-on"></span>
+                    </div>
+                    <script type="text/javascript">
+                        $( function()
+                        {
+                            $( '#dpfirstPaymentDate' ).datepicker( {
+                                autoclose: true,
+                                language: "ru",
+                                weekStart: 1
+                            } );
+                        } );
+                    </script>
+                </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <label class="col-md-4 control-label small" for="firstPaymentDate">Дата начала платежей</label>
-
-            <div class="col-md-8">
-                <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017" data-date-format="dd.mm.yyyy">
-                    <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
-                    <span class="add-on"></span>
-                </div>
-                <script type="text/javascript">
-                    $( function()
-                    {
-                        $( '#dpfirstPaymentDate' ).datepicker( {
-                            autoclose: true,
-                            language: "ru",
-                            weekStart: 1
-                        } );
-                    } );
-                </script>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
     <div class="form-group">
@@ -177,35 +180,35 @@
 
 <div class="row"></div>
 
-<div class="row">
+<div class="row" style="margin-bottom: 1em">
     <div class="form-group">
         <div class="col-lg-4">
-            <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
+            <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-md">
         </div>
     </div>
 </div>
 
-<div class="row"></div>
+</form>
 
 <div class="row">
     <div class="form-group">
-            <div class="col-lg-7">
-                <div class="input-group">
+        <div class="col-lg-7">
+            <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
                     </span>
-                    <!--suppress HtmlFormInputWithoutLabel -->
-                    <input id="directLinkEx" readonly="true" type="text" class="form-control"
-                           placeholder="Прямой линк...">
-                </div>
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <input id="directLinkEx" readonly="true" type="text" class="form-control"
+                       placeholder="Прямой линк...">
             </div>
-            <script type="text/javascript">
-                function copyDirectLink()
-                {
-                    document.getElementById( "directLinkEx" ).select();
-                    document.execCommand( 'copy' );
-                }
-            </script>
+        </div>
+        <script type="text/javascript">
+            function copyDirectLink()
+            {
+                document.getElementById( "directLinkEx" ).select();
+                document.execCommand( 'copy' );
+            }
+        </script>
     </div>
 </div>
 
@@ -257,6 +260,7 @@
     </div>
 </div>
 
+</div>
 </div>
 </div>
 </body>

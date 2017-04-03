@@ -147,7 +147,7 @@ function computeAndShowCard()
 
     var instalment = computeAndShowCommon( annuity, months );
 
-    document.getElementById( "months" ).innerHTML = "\<b>Кол-во платежей: \</b>" + getFormattedSum( instalment.length, 0 );
+    document.getElementById( "months" ).innerHTML = "\<b>Кол-во платежей: \</b>" + getFormattedSum( instalment[instalment.length - 1].row, 0 );
 
 }
 
@@ -211,9 +211,10 @@ function computeAndShowCommon( annuity, months )
     var isRounded = false;
     var periodsPercentOnly = getNormalSum( readControlValueSafe( "periodsPercentOnly", "0" ) );
 
+    var isErDuration = true;
     if( document.getElementById( "erAnnuityRadio" ) != null )
     {
-        var isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
+        isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
     }
 
     var er = [];

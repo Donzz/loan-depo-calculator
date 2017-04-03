@@ -51,7 +51,7 @@
     <label for="rate">
         Годовая ставка, %:
     </label>
-    <input id="rate" type="text" value="25" class="form-control"
+    <input id="rate" type="text" value="29.9" class="form-control"
            onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
 </div>
 <div class="col-lg-1">
@@ -109,6 +109,35 @@
 <br/>
 <br/>
 <br/>
+<div class="row"><br/></div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-3">
+            <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
+                   class="btn btn-sm">
+        </div>
+    </div>
+</div>
+<div class="row"></div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-5">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th><b>Сумма</b></th>
+                    <th><b>Дата</b></th>
+                </tr>
+                </thead>
+                <tbody id="dynEr">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+
 <br/>
 <br/>
 

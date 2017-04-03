@@ -1,0 +1,188 @@
+<!--Created by Kirill Danilov-->
+<!--2017-->
+<!--Contact the author if want to use-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+<body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/third/jquery-3.1.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/third/bootstrap.min.js"></script>
+<script src="js/third/bootstrap-datepicker.js"></script>
+<script src="js/third/bootstrap-datepicker.ru.js"></script>
+<script src="js/third/prettify.js"></script>
+<script src="js/calcEffectivePercent.js"></script>
+<script src="js/calculation.js"></script>
+<script src="js/lookAndFeel.js"></script>
+<script src="js/ga.js"></script>
+
+<script type="text/javascript">
+    document.addEventListener( 'DOMContentLoaded', function ()
+    {
+        setGetParameters();
+    }, false );
+
+    function computeAndShow()
+    {
+        computeAndShowCard();
+    }
+</script>
+
+
+<div class="col-sm-1">
+    <label for="amount">
+        Сумма:
+    </label>
+    <br/>
+    <br/>
+    <input id="amount" type="text" value="50 000" class="form-control"
+           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
+</div>
+<div class="col-lg-1">
+    <label for="rate">
+        Годовая ставка, %:
+    </label>
+    <input id="rate" type="text" value="25" class="form-control"
+           onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
+</div>
+<div class="col-lg-1">
+    <label for="minPayment">
+        Сумма мин. платежа
+    </label>
+    <input id="minPayment" type="text" value="2 000" class="form-control"
+               onblur="document.getElementById('minPayment').value = getFormattedSum(document.getElementById('minPayment').value, 0)"/>
+</div>
+<div class="col-lg-1">
+    <label for="loanStartDate">
+        Начало расч. периода:
+    </label>
+
+    <div class="input-append date" id="dploanStartDate" data-date="05.04.2017" data-date-format="dd.mm.yyyy">
+        <input id="loanStartDate" type="text" value="05.04.2017" class="form-control" onchange="setPaymentStartDate()">
+        <span class="add-on"></span>
+
+    </div>
+    <script type="text/javascript">
+        $( function ()
+        {
+            $( '#dploanStartDate' ).datepicker( {
+                autoclose: true,
+                language: "ru",
+                weekStart: 1
+            } );
+        } );
+    </script>
+</div>
+
+<div class="col-lg-1">
+    <label for="firstPaymentDate">
+        Конец платеж. периода:
+    </label>
+
+    <div class="input-append date" id="dpfirstPaymentDate" data-date="24.05.2017" data-date-format="dd.mm.yyyy">
+        <input id="firstPaymentDate" type="text" class="form-control" value="24.05.2017"/>
+        <span class="add-on"></span>
+    </div>
+    <script type="text/javascript">
+        $( function ()
+        {
+            $( '#dpfirstPaymentDate' ).datepicker( {
+                autoclose: true,
+                language: "ru",
+                weekStart: 1
+            } );
+        } );
+    </script>
+</div>
+<br/>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="col-lg-4">
+    <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-lg">
+</div>
+<br/>
+<br/>
+<br/>
+
+<p>
+
+<div class="col-lg-7">
+    <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
+                </span>
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input id="directLinkEx" readonly="true" type="text" class="form-control"
+               placeholder="Прямой линк...">
+    </div>
+</div>
+<script type="text/javascript">
+    function copyDirectLink()
+    {
+        document.getElementById( "directLinkEx" ).select();
+        document.execCommand( 'copy' );
+    }
+</script>
+<br/>
+<br/>
+<br/>
+
+
+<div class="col-md-7">
+    <table class="table">
+        <tr>
+            <!--<td><b>Аннуитетный платеж:</b></td>-->
+            <td>
+                <div id="months"><b>Кол-во платежей: </b></div>
+            </td>
+            <!--<td><b>ПСК:</b></td>-->
+            <td>
+                <div id="fullCreditCost" class="lead"><b>ПСК: </b></div>
+            </td>
+            <!--<td><b>Переплата:</b></td>-->
+            <td>
+                <div id="overpayment"><b>Переплата: </b></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="col-md-12">
+    <div class="table-responsive">
+        <table id="instalmentTable" class="table table-striped">
+            <thead>
+            <tr>
+                <th><b>#</b></th>
+                <th><b>Дата</b></th>
+                <th><b>Платеж</b></th>
+                <th><b>Проценты</b></th>
+                <th><b>Основной долг</b></th>
+                <th><b>Остаток долга</b></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+</body>
+
+</html>

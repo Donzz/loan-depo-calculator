@@ -2,6 +2,13 @@
 //2017
 //Contact the author if want to use
 
+var amount;
+var rate;
+var normalRate;
+var interestReduceSumPercent;
+var loanStartDate;
+var firstPaymentDate;
+
 function getNormalDate( dateStr )
 {
     var dateNormal = dateStr.split( '.' );
@@ -115,17 +122,63 @@ function setPaymentStartDate()
     $( '#dpfirstPaymentDate' ).datepicker( 'update', getFormattedDate( firstPaymentDate ) );
 }
 
-function computeAndShow()
+function computeAndShowCredit()
+{
+    readControls();
+    var months = getNormalSum( document.getElementById( "months" ).value );
+    var annuity = calculateMonthAnnuity( amount, normalRate, months, false );
+
+    document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
+
+    computeAndShowCommon( annuity, months );
+}
+
+function computeAndShowCard()
+{
+    readControls();
+    var months = 0;
+    var annuity = getNormalSum( document.getElementById( "minPayment" ).value );
+    var minRealPayment = calculatePercentForDates( amount, normalRate, loanStartDate, firstPaymentDate );
+    if( annuity < minRealPayment )
+    {
+        annuity = minRealPayment;
+        document.getElementById( "minPayment" ).value = getFormattedSum( annuity );
+    }
+
+    var instalment = computeAndShowCommon( annuity, months );
+
+    document.getElementById( "months" ).innerHTML = "\<b>Кол-во платежей: \</b>" + getFormattedSum( instalment.length, 0 );
+
+}
+
+function readControls()
+{
+    amount = getNormalSum( document.getElementById( "amount" ).value );
+
+    rate = getNormalSum( document.getElementById( "rate" ).value );
+    normalRate = rate / 100;
+
+    interestReduceSumPercent = getNormalSum( readControlValueSafe( "interestReduceSumPercent", "0" ) );
+
+    loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
+    firstPaymentDate = getNormalDate( document.getElementById( "firstPaymentDate" ).value );
+}
+
+function readControlValueSafe( idControl, defaultValue )
+{
+    var result = defaultValue;
+    var control = document.getElementById( idControl );
+    if( control != null )
+    {
+        result = control.value;
+    }
+    return result;
+}
+
+function computeAndShowCommon( annuity, months )
 {
     var percentLimit = 99;
 
-    var amount = getNormalSum( document.getElementById( "amount" ).value );
-
-    var months = getNormalSum( document.getElementById( "months" ).value );
-    var rate = getNormalSum( document.getElementById( "rate" ).value );
-    var normalRate = rate / 100;
-
-    var interestReduceSumPercent = getNormalSum( document.getElementById( "interestReduceSumPercent" ).value );
     var interestReduceSum;
     if( interestReduceSumPercent > percentLimit )
     {
@@ -136,12 +189,12 @@ function computeAndShow()
         interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
     }
 
-    var interestReduceDiff = getNormalSum( document.getElementById( "interestReduceDiff" ).value );
+    var interestReduceDiff = getNormalSum( readControlValueSafe( "interestReduceDiff", "0" ) );
     //noinspection UnnecessaryLocalVariableJS
     var normalInterestReduceDiff = interestReduceDiff / 100;
     normalRate -= normalInterestReduceDiff;
 
-    var insurancePercent = getNormalSum( document.getElementById( "insurance" ).value );
+    var insurancePercent = getNormalSum( readControlValueSafe( "insurance", "0" ) );
     var insuranceSum;
     if( insurancePercent > percentLimit )
     {
@@ -153,13 +206,15 @@ function computeAndShow()
     }
     amount += insuranceSum;
 
-    var loanStartDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
-    var firstPaymentDate = getNormalDate( document.getElementById( "firstPaymentDate" ).value );
-
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
+    //noinspection JSUnusedLocalSymbols
     var isRounded = false;
-    var periodsPercentOnly = getNormalSum( document.getElementById( "periodsPercentOnly" ).value );
-    var isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
+    var periodsPercentOnly = getNormalSum( readControlValueSafe( "periodsPercentOnly", "0" ) );
+
+    if( document.getElementById( "erAnnuityRadio" ) != null )
+    {
+        var isErDuration = !document.getElementById( "erAnnuityRadio" ).checked;
+    }
 
     var er = [];
     for( var erI = 1; ; erI++ )
@@ -182,9 +237,6 @@ function computeAndShow()
         return a.date.getTime() - b.date.getTime();
     } );
 
-    var annuity = calculateMonthAnnuity( amount, normalRate, months, isRounded );
-
-    document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
     var instalment = createInstalment( amount, annuity, normalRate, loanStartDate, firstPaymentDate, periodsPercentOnly, er, isErDuration, months );
 
     var table = document.getElementById( "instalmentTable" );
@@ -249,6 +301,8 @@ function computeAndShow()
     document.getElementById( "fullCreditCost" ).innerHTML = "\<b>ПСК: \</b>" + getFormattedSum( fullCreditCost, 3 ) + "%";
 
     createDirectLink();
+
+    return instalment;
 }
 
 function createDirectLink()

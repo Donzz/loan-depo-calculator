@@ -28,7 +28,6 @@ function calculateMonthAnnuity( amount, rate, months, isRounded )
 function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDate, periodsPercentOnly, er, isErDuration, months )
 {
     var instalment = [];
-    var millisInDay = 1000 * 60 * 60 * 24;
     var curAmount = amount;
     var curAnnuity = annuity;
     var curPayment;
@@ -37,7 +36,6 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
     var lastPaymentDate = new Date( loanStartDate.getTime() );
     var nextPaymentDate = new Date( firstPaymentDate.getTime() );
     var curPaymentDate;
-    var curPeriod;
     var curRow;
     var rowNumber;
     var curEr = er.slice();
@@ -53,8 +51,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
             curPaymentDate = curEr[0].date;
             curPayment += curEr[0].sum;
         }
-        curPeriod = ( curPaymentDate.getTime() - lastPaymentDate.getTime() ) / millisInDay;
-        curPercent = calculatePercentForPeriod( curAmount, rate, curPeriod );
+        curPercent = calculatePercentForDates( curAmount, rate, lastPaymentDate, curPaymentDate );
 
         if( curPercent > curAnnuity )
         {
@@ -93,14 +90,18 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         }
         curAmount = Math.round( ( curAmount - curLoan ) * 100 ) / 100;
 
+        var paidAnnuity = Math.round( ( curLoan + curPercent ) * 100 ) / 100;
+
         curRow =
         {
             row: rowNumber,
             date: new Date( curPaymentDate.getTime() ),
-            annuity: Math.round( ( curLoan + curPercent ) * 100 ) / 100,
+            annuity: paidAnnuity,
             percent: curPercent,
             loan: curLoan,
-            remainLoan: curAmount
+            remainLoan: curAmount,
+            overpaymentTimed: curPercent / Math.pow( 1 + rate / 12, i ),
+            paymentTimed: paidAnnuity / Math.pow( 1 + rate / 12, i )
         };
         instalment.push( curRow );
 
@@ -123,9 +124,18 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
 }
 
 //    Calculate percent for curAmount with rate as annual year rate and period in days
+//noinspection JSUnusedGlobalSymbols
 function calculatePercentForPeriod( amount, rate, period )
 {
     return Math.round( calculatePercent( amount, rate ) * period * 100 / 365 ) / 100;
+}
+
+//    Calculate percent for curAmount with rate as annual year rate and period between two dates
+function calculatePercentForDates( amount, rate, firstDate, lastDate )
+{
+    var millisInDay = 1000 * 60 * 60 * 24;
+    var period = ( lastDate.getTime() - firstDate.getTime() ) / millisInDay;
+    return calculatePercentForPeriod( amount, rate, period );
 }
 
 function calculatePercent( amount, rate )

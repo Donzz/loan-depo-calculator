@@ -34,52 +34,95 @@
 <script src="js/lookAndFeel.js"></script>
 
 <form class="form-inline">
-    <br/>
-    <div class="col-sm-2">
-        <div class="form-group" style="min-width:160px">
-            <label class="sr-only" for="amount">Сумма</label>
-            <div class="input-group">
-                <input id="amount" type="text" class="form-control" placeholder="Сумма, руб.">
-                <span class="input-group-addon" id="amount-addon">руб.</span>
+    <!--<br/>-->
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group" style="min-width:130px">
+                <label class="sr-only" for="amount">Сумма</label>
+
+                <div class="input-group">
+                    <input id="amount" type="text" class="form-control" placeholder="Сумма, руб.">
+                    <span class="input-group-addon" id="amount-addon">руб.</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label class="sr-only" for="rate">Годовая ставка</label>
+
+                <div class="input-group">
+                    <input id="rate" type="text" class="form-control" placeholder="Годовая ставка, %">
+                    <span class="input-group-addon" id="rate-addon">%</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label class="sr-only" for="months">Срок</label>
+
+                <div class="input-group">
+                    <input id="months" type="number" class="form-control" placeholder="Срок, месяцев">
+                    <span class="input-group-addon" id="months-addon">мес.</span>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-2">
-        <div class="form-group">
-            <label class="sr-only" for="rate">Годовая ставка</label>
-            <div class="input-group">
-                <input id="rate" type="text" class="form-control" placeholder="Годовая ставка, %">
-                <span class="input-group-addon" id="rate-addon">%</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-2">
-        <div class="form-group">
-            <label class="sr-only" for="months">Срок</label>
-            <div class="input-group">
-                <input id="months" type="number" class="form-control" placeholder="Срок, месяцев">
-                <span class="input-group-addon" id="months-addon">мес.</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-2">
-        <div class="form-group">
-            <label class="sr-only" for="loanStartDate">Дата выдачи</label>
-            <div class='input-group date' id='dploanStartDate'>
-                <input id="loanStartDate" type='text' class="form-control" placeholder="Дата выдачи"/>
-                <span class="input-group-addon">
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="loanStartDate">&nbsp;Дата выдачи</label><br/>
+
+                <div class='input-group date' id='dploanStartDate'>
+                    <input id="loanStartDate" type='text' class="form-control" placeholder="Дата выдачи"/>
+                    <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $( function()
+                {
+                    $( '#dploanStartDate' ).datetimepicker( {
+                        locale: 'ru',
+                        format: 'DD.MM.YYYY'
+                    } );
+                } );
+            </script>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="firstPaymentDate">&nbsp;Первый платеж</label><br/>
+
+                <div class='input-group date' id='dpfirstPaymentDate'>
+                    <input id="firstPaymentDate" type='text' class="form-control" placeholder="Первый платеж"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $( function()
+                {
+                    $( '#dpfirstPaymentDate' ).datetimepicker( {
+                        locale: 'ru',
+                        format: 'DD.MM.YYYY'
+                    } );
+                } );
+            </script>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="periodsPercentOnly">Платежей только %</label>
+
+                <div class="input-group">
+                    <input id="periodsPercentOnly" type="number" class="form-control" placeholder="Только проценты">
+                    <span class="input-group-addon" id="months-addon">платежей</span>
+                </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#dploanStartDate').datetimepicker({
-                    locale: 'ru',
-                    format: 'DD.MM.YYYY'
-                });
-            });
-        </script>
     </div>
 </form>
 </body>

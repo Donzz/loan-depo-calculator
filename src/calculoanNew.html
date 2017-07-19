@@ -68,10 +68,11 @@
             </div>
         </div>
     </div>
+    <div class="row"></div>
     <div class="row">
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="loanStartDate">&nbsp;Дата выдачи</label><br/>
+                <label for="loanStartDate">Дата выдачи</label><br/>
 
                 <div class='input-group date' id='dploanStartDate'>
                     <input id="loanStartDate" type='text' class="form-control" placeholder="Дата выдачи"/>
@@ -92,7 +93,7 @@
         </div>
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="firstPaymentDate">&nbsp;Первый платеж</label><br/>
+                <label for="firstPaymentDate">Первый платеж</label><br/>
 
                 <div class='input-group date' id='dpfirstPaymentDate'>
                     <input id="firstPaymentDate" type='text' class="form-control" placeholder="Первый платеж"/>
@@ -112,6 +113,7 @@
             </script>
         </div>
     </div>
+    <div class="row"></div>
     <div class="row">
         <div class="col-sm-2">
             <div class="form-group">
@@ -121,6 +123,60 @@
                     <input id="periodsPercentOnly" type="number" class="form-control" placeholder="Только проценты">
                     <span class="input-group-addon" id="months-addon">платежей</span>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="insurance">Страховка</label>
+
+                <div class="input-group">
+                    <input id="insurance" type="text" class="form-control" placeholder="Страховка">
+                    <span class="input-group-addon" id="insurance-addon">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="interestReduceSumPercent">Платеж за снижение ставки</label>
+
+                <div class="input-group">
+                    <input id="interestReduceSumPercent" type="text" class="form-control" placeholder="Платеж за снижение">
+                    <span class="input-group-addon" id="interestReduceSumPercent-addon">%</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="interestReduceDiff">Снижение ставки</label>
+
+                <div class="input-group">
+                    <input id="interestReduceDiff" type="text" class="form-control" placeholder="Снижение ставки">
+                    <span class="input-group-addon" id="interestReduceDiff-addon">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-sm-2">
+            <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
+                   class="btn btn-default">
+        </div>
+        <div class="col-sm-2">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="erRadio" id="erDurationRadio" checked="true">Уменьшение срока
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="erRadio" id="erAnnuityRadio">Уменьшение платежа
+                </label>
             </div>
         </div>
     </div>

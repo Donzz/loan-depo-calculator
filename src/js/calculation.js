@@ -114,7 +114,16 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             if( !isErDuration )
             {
-                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i, false );
+                var corrected;
+                if( i >= periodsPercentOnly )
+                {
+                    corrected = periodsPercentOnly;
+                }
+                else
+                {
+                    corrected = i;
+                }
+                curAnnuity = calculateMonthAnnuity( curAmount, rate, months - i + corrected, false );
             }
             curEr.splice( 0, 1 );
         }

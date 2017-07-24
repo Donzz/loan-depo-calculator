@@ -332,7 +332,7 @@ function createDirectLink()
         }
     }
     url = url.substr( 0, url.length - 1 );
-    document.getElementById( "directLinkEx" ).value = url;
+    document.getElementById( "directLinkEx" ).value = encodeURI(url);
 }
 
 function setGetParameters()

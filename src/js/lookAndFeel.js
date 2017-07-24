@@ -119,7 +119,7 @@ function setPaymentStartDate()
     var firstPaymentDate = getNormalDate( document.getElementById( "loanStartDate" ).value );
     firstPaymentDate.setMonth( firstPaymentDate.getMonth() + 1 );
     document.getElementById( "firstPaymentDate" ).value = getFormattedDate( firstPaymentDate );
-    $( '#dpfirstPaymentDate' ).datepicker( 'update', getFormattedDate( firstPaymentDate ) );
+//    $( '#dpfirstPaymentDate' ).datetimepicker( 'update', getFormattedDate( firstPaymentDate ) );
 }
 
 function computeAndShowCredit()
@@ -168,7 +168,7 @@ function readControlValueSafe( idControl, defaultValue )
 {
     var result = defaultValue;
     var control = document.getElementById( idControl );
-    if( control != null )
+    if( control != null && control.value != '' )
     {
         result = control.value;
     }
@@ -357,12 +357,11 @@ function setGetParameters()
                 {
                     var dateStr = getNormalDate( e.value );
                     var dateControl = $( "#dp" + p );
-                    dateControl.datepicker( {
-                        autoclose: true,
-                        language: "ru",
-                        weekStart: 1
+                    dateControl.datetimepicker( {
+                        locale: 'ru',
+                        format: 'DD.MM.YYYY'
                     } );
-                    dateControl.datepicker( 'update', getFormattedDate( dateStr ) );
+                    dateControl.value = getFormattedDate( dateStr );
                 }
                 isSet = true;
             }
@@ -370,7 +369,7 @@ function setGetParameters()
     }
     if( isSet )
     {
-        computeAndShow();
+        computeAndShowCredit();
     }
 
 }
@@ -417,10 +416,9 @@ function addEarlyRepaymentControls()
     e2Node.placeholder = "Дата";
     e2Node.childNodes.item( 1 ).id = "dynErDate" + ( rowNumber );
 
-    e2.datepicker( {
-        autoclose: true,
-        language: "ru",
-        weekStart: 1
+    e2.datetimepicker( {
+        locale: 'ru',
+        format: 'DD.MM.YYYY'
     } );
 
     tr.insertCell( 1 ).appendChild( e2Node );
@@ -457,4 +455,10 @@ function deleteEarlyRepaymentControls( buttonId )
         document.getElementById( "dynErTr" + erI ).id = "dynErTr" + ( erI - 1 );
         document.getElementById( "deleteEr" + erI ).id = "deleteEr" + ( erI - 1 );
     }
+}
+
+function copyDirectLink()
+{
+    document.getElementById( "directLinkEx" ).select();
+    document.execCommand( 'copy' );
 }

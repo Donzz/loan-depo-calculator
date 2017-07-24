@@ -1,6 +1,6 @@
 <!--Created by Kirill Danilov-->
 <!--2017-->
-<!--Contact the author if want to use-->
+<!--Contact the author if you want to use it-->
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en" xmlns="http://www.w3.org/1999/html">
@@ -10,165 +10,194 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/datepicker.css" rel="stylesheet">
-    <link href="css/prettify.css" rel="stylesheet">
+    <!--DateTime Picker-->
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <!--My-->
     <link href="css/calculoan.css" rel="stylesheet">
+
+
+    <title>Calc your loan</title>
+</head>
 <body>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/third/jquery-3.1.1.min.js"></script>
+<!-- Moment -->
+<script src="js/third/moment-with-locales.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/third/bootstrap.min.js"></script>
-<script src="js/third/bootstrap-datepicker.js"></script>
-<script src="js/third/bootstrap-datepicker.ru.js"></script>
-<script src="js/third/prettify.js"></script>
+<!-- DateTime Picker -->
+<script src="js/third/bootstrap-datetimepicker.min.js"></script>
+<!--My own-->
 <script src="js/calcEffectivePercent.js"></script>
 <script src="js/calculation.js"></script>
 <script src="js/lookAndFeel.js"></script>
-<script src="js/ga.js"></script>
 
 <script type="text/javascript">
     document.addEventListener( 'DOMContentLoaded', function()
     {
         setGetParameters();
     }, false );
-
-    function computeAndShow()
-    {
-        computeAndShowCredit();
-    }
 </script>
 
-<div class="container">
-<div class="row">
-    <div class="header">
-        <h2>Кредитный калькулятор</h2>
-    </div>
-</div>
-<div class="content">
 
-<div class="container">
-    <div class="row" style="margin-bottom: 3em">
+<form class="form-inline">
+    <!--<br/>-->
 
-    </div>
-    <form class="form-inline">
-        <div class="row">
-            <div class="col-md-4">
-                <label class="control-label small" for="amount">Сумма, руб.</label>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group" style="min-width:130px">
+                <label class="sr-only" for="amount">Сумма</label>
 
-                <input id="amount" type="text" value="3 000 000" class="form-control"
-                       onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)"/>
-            </div>
-            <div class="col-md-4">
-                <label class="control-label small col-md-2" for="rate">Годовая ставка, %</label>
-                <input id="rate" type="text" value="25" class="form-control  col-md-2"
-                       onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)"/>
-            </div>
-            <div class="col-md-4">
-                <label class="control-label small" for="months">Срок, мес.</label>
-
-                <input id="months" type="number" value="60" class="form-control"/>
+                <div class="input-group">
+                    <input id="amount" type="text" class="form-control" placeholder="Сумма, руб." value="3 000 000"
+                           onblur="document.getElementById('amount').value = getFormattedSum(document.getElementById('amount').value, 0)">
+                    <span class="input-group-addon" id="amount-addon">руб.</span>
+                </div>
             </div>
         </div>
-        <div class="row">
+        <div class="col-sm-2">
             <div class="form-group">
-                <div class="col-md-2">
-                    <label class="control-label small" for="loanStartDate">Дата выдачи кредита</label>
+                <label class="sr-only" for="rate">Годовая ставка</label>
 
-                    <div class="input-append date" id="dploanStartDate" data-date="30.01.2017"
-                         data-date-format="dd.mm.yyyy">
-                        <input id="loanStartDate" type="text" value="30.01.2017" class="form-control"
-                               onchange="setPaymentStartDate()">
-                        <span class="add-on"></span>
-
-                    </div>
-                    <script type="text/javascript">
-                        $( function()
-                        {
-                            $( '#dploanStartDate' ).datepicker( {
-                                autoclose: true,
-                                language: "ru",
-                                weekStart: 1
-                            } );
-                        } );
-                    </script>
-                </div>
-                <div class="col-md-2">
-                    <label class="control-label small" for="firstPaymentDate">Дата начала платежей</label>
-
-                    <div class="input-append date" id="dpfirstPaymentDate" data-date="02.03.2017"
-                         data-date-format="dd.mm.yyyy">
-                        <input id="firstPaymentDate" type="text" class="form-control" value="02.03.2017"/>
-                        <span class="add-on"></span>
-                    </div>
-                    <script type="text/javascript">
-                        $( function()
-                        {
-                            $( '#dpfirstPaymentDate' ).datepicker( {
-                                autoclose: true,
-                                language: "ru",
-                                weekStart: 1
-                            } );
-                        } );
-                    </script>
+                <div class="input-group">
+                    <input id="rate" type="text" class="form-control" placeholder="Годовая ставка, %" value="25"
+                           onblur="document.getElementById('rate').value = getFormattedSum(document.getElementById('rate').value, 0)">
+                    <span class="input-group-addon" id="rate-addon">%</span>
                 </div>
             </div>
         </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label class="sr-only" for="months">Срок</label>
 
-<div class="row">
-    <div class="form-group">
-
-        <div class="col-md-3">
-            <label for="periodsPercentOnly">
-                Платежи только %:
-            </label>
-            <input id="periodsPercentOnly" type="number" min="0" max="1000" value="1" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <label for="insurance">
-                Страховка, %:
-            </label>
-            <input id="insurance" type="text" value="0" class="form-control"
-                   onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)"/>
-        </div>
-        <div class="col-md-3">
-            <label for="interestReduceSumPercent">
-                Платеж за снижение, %:
-            </label>
-            <input id="interestReduceSumPercent" type="text" value="0" class="form-control"
-                   onblur="document.getElementById('interestReduceSumPercent').value = getFormattedSum(document.getElementById('interestReduceSumPercent').value, 0)"/>
-        </div>
-        <div class="col-md-3">
-            <label for="interestReduceDiff">
-                Снижение ставки, %:
-            </label>
-            <input id="interestReduceDiff" type="text" class="form-control" value="0"
-                   onblur="document.getElementById('interestReduceDiff').value = getFormattedSum(document.getElementById('interestReduceDiff').value, 0)"/>
+                <div class="input-group">
+                    <input id="months" type="number" class="form-control" min="1" value="60" placeholder="Срок, месяцев">
+                    <span class="input-group-addon" id="months-addon">мес.</span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="loanStartDate">Дата выдачи</label><br/>
 
-<div class="row"><br/></div>
-<div class="row">
-    <div class="form-group">
-        <div class="col-md-3">
+                <div class='input-group date' id='dploanStartDate'>
+                    <input id="loanStartDate" type='text' class="form-control" placeholder="Дата выдачи" value="31.01.2017" onchange="setPaymentStartDate()"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $( function()
+                {
+                    $( '#dploanStartDate' ).datetimepicker( {
+                        locale: 'ru',
+                        format: 'DD.MM.YYYY'
+                    } );
+                } );
+                $("#dploanStartDate").on("dp.change", function () {
+                    setPaymentStartDate()
+                });
+            </script>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="firstPaymentDate">Первый платеж</label><br/>
+
+                <div class='input-group date' id='dpfirstPaymentDate'>
+                    <input id="firstPaymentDate" type='text' class="form-control" placeholder="Первый платеж" value="02.03.2017"/>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $( function()
+                {
+                    $( '#dpfirstPaymentDate' ).datetimepicker( {
+                        locale: 'ru',
+                        format: 'DD.MM.YYYY'
+                    } );
+                } );
+            </script>
+        </div>
+    </div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="periodsPercentOnly">Платежей только %</label>
+
+                <div class="input-group">
+                    <input id="periodsPercentOnly" type="number" class="form-control" placeholder="Только проценты" value="1" min="0">
+                    <span class="input-group-addon" id="months-addon">платежей</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="insurance">Страховка</label>
+
+                <div class="input-group">
+                    <input id="insurance" type="text" class="form-control" placeholder="Страховка" value="0"
+                           onblur="document.getElementById('insurance').value = getFormattedSum(document.getElementById('insurance').value, 0)">
+                    <span class="input-group-addon" id="insurance-addon">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="interestReduceSumPercent">Платеж за снижение ставки</label>
+
+                <div class="input-group">
+                    <input id="interestReduceSumPercent" type="text" class="form-control" placeholder="Платеж за снижение" value="0"
+                           onblur="document.getElementById('interestReduceSumPercent').value = getFormattedSum(document.getElementById('interestReduceSumPercent').value, 0)">
+                    <span class="input-group-addon" id="interestReduceSumPercent-addon">%</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="interestReduceDiff">Снижение ставки</label>
+
+                <div class="input-group">
+                    <input id="interestReduceDiff" type="text" class="form-control" placeholder="Снижение ставки" value="0"
+                           onblur="document.getElementById('interestReduceDiff').value = getFormattedSum(document.getElementById('interestReduceDiff').value, 0)">
+                    <span class="input-group-addon" id="interestReduceDiff-addon">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-sm-2">
             <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
                    class="btn btn-sm">
         </div>
-        <div class="col-md-2">
+        <div class="col-sm-2">
             <div class="radio">
-                <label><input id="erDurationRadio" type="radio" name="erRadio" checked="true">Уменьшение срока</label>
+                <label>
+                    <input type="radio" name="erRadio" id="erDurationRadio" checked="true">Уменьшение срока
+                </label>
             </div>
             <div class="radio">
-                <label><input id="erAnnuityRadio" type="radio" name="erRadio">Уменьшение платежа</label>
+                <label>
+                    <input type="radio" name="erRadio" id="erAnnuityRadio">Уменьшение платежа
+                </label>
             </div>
         </div>
     </div>
-</div>
-<div class="row"></div>
-<div class="row">
-    <div class="form-group">
-        <div class="col-md-5">
+    <div class="row">
+        <div class="col-sm-4">
             <table class="table">
                 <thead>
                 <tr>
@@ -181,47 +210,27 @@
             </table>
         </div>
     </div>
-</div>
-
-<div class="row"></div>
-
-<div class="row" style="margin-bottom: 1em">
-    <div class="form-group">
-        <div class="col-lg-4">
-            <input id="submit" type="button" onclick="computeAndShow()" value="Рассчитать" class="btn btn-md">
+    <div class="row">
+        <div class="col-sm-2">
+            <input id="submit" type="button" onclick="computeAndShowCredit()" value="Рассчитать"
+                   class="btn btn-lg">
         </div>
     </div>
-</div>
-
-</form>
-
-<div class="row">
-    <div class="form-group">
-        <div class="col-lg-7">
+    <div class="row">
+        <div class="col-sm-6">
             <div class="input-group">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
-                    </span>
-                <!--suppress HtmlFormInputWithoutLabel -->
-                <input id="directLinkEx" readonly="true" type="text" class="form-control"
-                       placeholder="Прямой линк...">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
+      </span>
+                <input id="directLinkEx" readonly="true" type="text" class="form-control" placeholder="Прямой линк...">
             </div>
+            <!-- /input-group -->
         </div>
-        <script type="text/javascript">
-            function copyDirectLink()
-            {
-                document.getElementById( "directLinkEx" ).select();
-                document.execCommand( 'copy' );
-            }
-        </script>
+        <!-- /.col-lg-6 -->
     </div>
-</div>
 
-<div class="row"></div>
-
-<div class="row">
-    <div class="form-group">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-sm-6">
             <table class="table">
                 <tr>
                     <!--<td><b>Аннуитетный платеж:</b></td>-->
@@ -240,13 +249,9 @@
             </table>
         </div>
     </div>
-</div>
 
-<div class="row"></div>
-
-<div class="row">
-    <div class="form-group">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-sm-6">
             <div class="table-responsive">
                 <table id="instalmentTable" class="table table-striped">
                     <thead>
@@ -263,11 +268,8 @@
             </div>
         </div>
     </div>
-</div>
 
-</div>
-</div>
-</div>
+</form>
+
 </body>
-
 </html>

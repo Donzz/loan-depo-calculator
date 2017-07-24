@@ -45,8 +45,8 @@
     <!--<br/>-->
 
     <div class="row">
-        <div class="col-sm-2">
-            <div class="form-group" style="min-width:130px">
+        <div class="col-md-2">
+            <div id="amountDiv" class="form-group">
                 <label class="sr-only" for="amount">Сумма</label>
 
                 <div class="input-group">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label class="sr-only" for="rate">Годовая ставка</label>
 
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label class="sr-only" for="months">Срок</label>
 
@@ -80,7 +80,7 @@
     </div>
     <div class="row"></div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="loanStartDate">Дата выдачи</label><br/>
 
@@ -99,12 +99,13 @@
                         format: 'DD.MM.YYYY'
                     } );
                 } );
-                $("#dploanStartDate").on("dp.change", function () {
+                $( "#dploanStartDate" ).on( "dp.change", function()
+                {
                     setPaymentStartDate()
-                });
+                } );
             </script>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="firstPaymentDate">Первый платеж</label><br/>
 
@@ -128,19 +129,19 @@
     </div>
     <div class="row"></div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="periodsPercentOnly">Платежей только %</label>
 
                 <div class="input-group">
                     <input id="periodsPercentOnly" type="number" class="form-control" placeholder="Только проценты" value="1" min="0">
-                    <span class="input-group-addon" id="months-addon">платежей</span>
+                    <span class="input-group-addon" id="months-addon">пл-й</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="insurance">Страховка</label>
 
@@ -153,9 +154,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
-                <label for="interestReduceSumPercent">Платеж за снижение ставки</label>
+                <label for="interestReduceSumPercent">Пл-ж за снижение</label>
 
                 <div class="input-group">
                     <input id="interestReduceSumPercent" type="text" class="form-control" placeholder="Платеж за снижение" value="0"
@@ -164,7 +165,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="form-group">
                 <label for="interestReduceDiff">Снижение ставки</label>
 
@@ -179,11 +180,11 @@
     <div class="row"></div>
     <div class="row"></div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-3">
             <input id="addEr" type="button" onclick="addEarlyRepaymentControls()" value="Добавить досрочное погашение"
                    class="btn btn-sm">
         </div>
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <div class="radio">
                 <label>
                     <input type="radio" name="erRadio" id="erDurationRadio" checked="true">Уменьшение срока
@@ -197,7 +198,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <table class="table">
                 <thead>
                 <tr>
@@ -211,65 +212,66 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2">
+        <div class="col-md-2">
             <input id="submit" type="button" onclick="computeAndShowCredit()" value="Рассчитать"
                    class="btn btn-lg">
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="input-group">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
-      </span>
-                <input id="directLinkEx" readonly="true" type="text" class="form-control" placeholder="Прямой линк...">
-            </div>
-            <!-- /input-group -->
-        </div>
-        <!-- /.col-lg-6 -->
-    </div>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <table class="table">
-                <tr>
-                    <!--<td><b>Аннуитетный платеж:</b></td>-->
-                    <td>
-                        <div id="annuity"><b>Аннуитетный платеж: </b></div>
-                    </td>
-                    <!--<td><b>ПСК:</b></td>-->
-                    <td>
-                        <div id="fullCreditCost" class="lead"><b>ПСК: </b></div>
-                    </td>
-                    <!--<td><b>Переплата:</b></td>-->
-                    <td>
-                        <div id="overpayment"><b>Переплата: </b></div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="table-responsive">
-                <table id="instalmentTable" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th><b>#</b></th>
-                        <th><b>Дата</b></th>
-                        <th><b>Платеж</b></th>
-                        <th><b>Проценты</b></th>
-                        <th><b>Основной долг</b></th>
-                        <th><b>Остаток долга</b></th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
 
 </form>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="copyDirectLink()">Copy</button>
+            </span>
+            <input id="directLinkEx" readonly="true" type="text" class="form-control" placeholder="Прямой линк...">
+        </div>
+        <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tr>
+                <!--<td><b>Аннуитетный платеж:</b></td>-->
+                <td>
+                    <div id="annuity"><b>Аннуитетный платеж: </b></div>
+                </td>
+                <!--<td><b>ПСК:</b></td>-->
+                <td>
+                    <div id="fullCreditCost" class="lead"><b>ПСК: </b></div>
+                </td>
+                <!--<td><b>Переплата:</b></td>-->
+                <td>
+                    <div id="overpayment"><b>Переплата: </b></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="table-responsive">
+            <table id="instalmentTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th><b>#</b></th>
+                    <th><b>Дата</b></th>
+                    <th><b>Платеж</b></th>
+                    <th><b>Проценты</b></th>
+                    <th><b>Основной долг</b></th>
+                    <th><b>Остаток долга</b></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

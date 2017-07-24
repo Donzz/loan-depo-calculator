@@ -399,16 +399,18 @@ function addEarlyRepaymentControls()
     var tr = document.createElement( "tr" );
     tr.id = "dynErTr" + rowNumber;
 
-    var e = document.getElementById( "amount" ).cloneNode( true );
-    e.id = "dynErSum" + rowNumber;
-    e.value = "";
-    e.placeholder = "Сумма к погашению";
-    e.onblur = function()
+    var e = $( "#amountDiv" ).clone();
+    var eNode = e.get( 0 );
+    var amountNode = eNode.childNodes.item( 3 ).childNodes.item( 1 );
+    amountNode.id = "dynErSum" + rowNumber;
+    amountNode.value = "";
+    amountNode.placeholder = "Сумма к погашению";
+    amountNode.onblur = function()
     {
-        document.getElementById( e.id ).value = getFormattedSum( document.getElementById( e.id ).value.replace( / /g, '' ), 0 );
+        document.getElementById( amountNode.id ).value = getFormattedSum( document.getElementById( amountNode.id ).value.replace( / /g, '' ), 0 );
     };
 
-    tr.insertCell( 0 ).appendChild( e );
+    tr.insertCell( 0 ).appendChild( eNode );
 
     var e2 = $( "#dpfirstPaymentDate" ).clone();
     var e2Node = e2.get( 0 );

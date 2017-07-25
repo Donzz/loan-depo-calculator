@@ -371,6 +371,10 @@ function setGetParameters()
     {
         computeAndShowCredit();
     }
+    else
+    {
+        document.getElementById( "loanStartDate" ).value = getFormattedDate(new Date());
+    }
 
 }
 

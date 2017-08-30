@@ -156,7 +156,7 @@ function readControls()
     amount = getNormalSum( document.getElementById( "amount" ).value );
 
     rate = getNormalSum( document.getElementById( "rate" ).value );
-    normalRate = rate / 100;
+    normalRate = getNormalRate(rate);
 
     interestReduceSumPercent = getNormalSum( readControlValueSafe( "interestReduceSumPercent", "0" ) );
 
@@ -175,6 +175,16 @@ function readControlValueSafe( idControl, defaultValue )
     return result;
 }
 
+function getNormalRate(locRate)
+{
+    var locNormalRate = locRate / 100;
+    var interestReduceDiff = getNormalSum( readControlValueSafe( "interestReduceDiff", "0" ) );
+    //noinspection UnnecessaryLocalVariableJS
+    var normalInterestReduceDiff = interestReduceDiff / 100;
+    locNormalRate -= normalInterestReduceDiff;
+    return locNormalRate;
+}
+
 function computeAndShowCommon( annuity, months )
 {
     var percentLimit = 99;
@@ -188,12 +198,6 @@ function computeAndShowCommon( annuity, months )
     {
         interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
     }
-
-    var interestReduceDiff = getNormalSum( readControlValueSafe( "interestReduceDiff", "0" ) );
-    //noinspection UnnecessaryLocalVariableJS
-    var normalInterestReduceDiff = interestReduceDiff / 100;
-    normalRate -= normalInterestReduceDiff;
-
     var insurancePercent = getNormalSum( readControlValueSafe( "insurance", "0" ) );
     var insuranceSum;
     if( insurancePercent > percentLimit )
@@ -414,7 +418,7 @@ function addEarlyRepaymentControls()
         document.getElementById( amountNode.id ).value = getFormattedSum( document.getElementById( amountNode.id ).value.replace( / /g, '' ), 0 );
     };
 
-    tr.insertCell( 0 ).appendChild( eNode );
+    tr.insertCell( 0 ).appendChild( amountNode );
 
     var e2 = $( "#dpfirstPaymentDate" ).clone();
     var e2Node = e2.get( 0 );

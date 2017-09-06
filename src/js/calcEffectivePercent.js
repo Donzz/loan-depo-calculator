@@ -6,12 +6,15 @@ function calcEffectivePercent( pskData, daysInPeriod )
     var sums = [];
     for( var d in pskData )
     {
+        //noinspection JSUnfilteredForInLoop
         dates.push( pskData[d].date );
+        //noinspection JSUnfilteredForInLoop
         sums.push( pskData[d].flow );
     }
     var m = dates.length; // число платежей
 
     //Задаем базвый период bp
+    //noinspection UnnecessaryLocalVariableJS
     var bp = daysInPeriod;
     //Считаем число базовых периодов в году:
     var cbp = Math.floor( 365 / bp );
@@ -55,6 +58,45 @@ function calcEffectivePercent( pskData, daysInPeriod )
     }
 
     //считаем ПСК
+    //noinspection UnnecessaryLocalVariableJS
     var psk = Math.floor( i * cbp * 100 * 1000 ) / 1000;
     return psk;
+}
+
+function checkPSK( psk, pskData, daysInPeriod )
+{
+    //Задаем базвый период bp
+    //noinspection UnnecessaryLocalVariableJS
+    var bp = daysInPeriod;
+    //Считаем число базовых периодов в году:
+    var cbp = Math.floor( 365 / bp );
+
+    var pskNorm = psk / 100 / cbp;
+
+    //входящие данные - даты платежей
+    var dates = [];
+    //входящие данные - суммы платежей
+    var sums = [];
+    for( var d in pskData )
+    {
+        //noinspection JSUnfilteredForInLoop
+        dates.push( pskData[d].date );
+        //noinspection JSUnfilteredForInLoop
+        sums.push( pskData[d].flow );
+    }
+    var m = dates.length; // число платежей
+
+    var sum = 0;
+    var k;
+    var q;
+    var e;
+    var days;
+    for( k = 0; k < m; k++ )
+    {
+        days = (dates[k] - dates[0]) / (24 * 60 * 60 * 1000);
+        q = Math.floor( days / bp );
+        e = ( days % bp ) / bp;
+        sum += sums[k] / ( ( 1 + e * pskNorm ) * Math.pow( 1 + pskNorm, q ) );
+    }
+    return sum;
 }

@@ -8,6 +8,7 @@ var normalRate;
 var interestReduceSumPercent;
 var loanStartDate;
 var firstPaymentDate;
+var check = false;
 
 function getNormalDate( dateStr )
 {
@@ -303,7 +304,15 @@ function computeAndShowCommon( annuity, months )
     document.getElementById( "overpayment" ).innerHTML = "\<b>Переплата: \</b>" + getFormattedSum( overpayment );
 
     var fullCreditCost = calcEffectivePercent( pskData, 30 );
-    document.getElementById( "fullCreditCost" ).innerHTML = "\<b>ПСК: \</b>" + getFormattedSum( fullCreditCost, 3 ) + "%";
+    if( check )
+    {
+        var pskSum = checkPSK( fullCreditCost, pskData, 30 );
+        document.getElementById( "fullCreditCost" ).innerHTML = "\<b>ПСК: \</b>" + getFormattedSum( fullCreditCost, 3 ) + "%" + " Checked sum: " + getFormattedSum( pskSum, 4 );
+    }
+    else
+    {
+        document.getElementById( "fullCreditCost" ).innerHTML = "\<b>ПСК: \</b>" + getFormattedSum( fullCreditCost, 3 ) + "%";
+    }
 
     createDirectLink();
 
@@ -368,6 +377,10 @@ function setGetParameters()
                     dateControl.value = getFormattedDate( dateStr );
                 }
                 isSet = true;
+            }
+            if( p == "check" )
+            {
+                check = true;
             }
         }
     }

@@ -1,0 +1,64 @@
+<!--Created by Kirill Danilov-->
+<!--2017-->
+<!--Contact the author if you want to use it-->
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Test calc</title>
+</head>
+<body>
+<script src="../js/calculation.js"></script>
+<p>
+    isLeapYear(2020):
+    <script type="text/javascript">
+        document.write(isLeapYear(2020) ? "true" : "false");
+    </script>
+    <br/>
+    <br/>
+    isLeapYear(2019):
+    <script type="text/javascript">
+        document.write(isLeapYear(2019) ? "true" : "false");
+    </script>
+
+    <br/>
+    <br/>
+    calculatePercentForPeriod(365000, 0.1, 1, false) == 100
+    <script type="text/javascript">
+        document.write((calculatePercentForPeriod(365000, 0.1, 1, false) == 100) ? "true" : "false");
+    </script>
+
+    <br/>
+    <br/>
+    calculatePercentForPeriod(366000, 0.1, 1, true) == 100
+    <script type="text/javascript">
+        document.write((calculatePercentForPeriod(366000, 0.1, 1, true) == 100) ? "true" : "false");
+    </script>
+
+    <br/>
+    <br/>
+    calculatePercentForDates(365000, 0.1, new Date(2019, 11, 31), new Date(2019, 11, 29)) == 200
+    <script type="text/javascript">
+        document.write(calculatePercentForDates(365000, 0.1, new Date(2019, 11, 29), new Date(2019, 11, 31)));
+        document.write((calculatePercentForDates(365000, 0.1, new Date(2019, 11, 29), new Date(2019, 11, 31)) == 200) ? "true" : "false");
+    </script>
+
+    <br/>
+    <br/>
+    calculatePercentForDates(366000, 0.1, new Date(2020, 11, 31), new Date(2020, 11, 29)) == 200
+    <script type="text/javascript">
+        document.write(calculatePercentForDates(366000, 0.1, new Date(2020, 11, 29), new Date(2020, 11, 31)));
+        document.write((calculatePercentForDates(366000, 0.1, new Date(2020, 11, 29), new Date(2020, 11, 31)) == 200) ? "true" : "false");
+    </script>
+
+    <br/>
+    <br/>
+    calculatePercentForDates(365000*366000, 0.1, new Date(2020, 0, 2), new Date(2019, 11, 31)) == 100*366000 + 100*365000
+    <script type="text/javascript">
+        document.write(calculatePercentForDates(365000*366000, 0.1, new Date(2019, 11, 31), new Date(2020, 0, 2)));
+        document.write((calculatePercentForDates(365000*366000, 0.1, new Date(2019, 11, 31), new Date(2020, 0, 2)) == 100*366000 + 100*365000) ? "true" : "false");
+    </script>
+</p>
+
+</body>
+</html>

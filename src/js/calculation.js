@@ -134,20 +134,40 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
 
 //    Calculate percent for curAmount with rate as annual year rate and period in days
 //noinspection JSUnusedGlobalSymbols
-function calculatePercentForPeriod( amount, rate, period )
+function calculatePercentForPeriod( amount, rate, period, isLeapYear )
 {
-    return Math.round( calculatePercent( amount, rate ) * period * 100 / 365 ) / 100;
+    var daysInYear = isLeapYear ? 366 : 365;
+    return Math.round( calculatePercent( amount, rate ) * period * 100 / daysInYear ) / 100;
 }
 
 //    Calculate percent for curAmount with rate as annual year rate and period between two dates
 function calculatePercentForDates( amount, rate, firstDate, lastDate )
 {
-    var millisInDay = 1000 * 60 * 60 * 24;
-    var period = ( lastDate.getTime() - firstDate.getTime() ) / millisInDay;
-    return calculatePercentForPeriod( amount, rate, period );
+    const millisInDay = 1000 * 60 * 60 * 24;
+    var firstYear = firstDate.getFullYear();
+    var lastYear = lastDate.getFullYear();
+    if( firstYear == lastYear || (!isLeapYear(firstYear) && !isLeapYear(lastYear)))
+    {
+        var period = ( lastDate.getTime() - firstDate.getTime() ) / millisInDay;
+        return calculatePercentForPeriod( amount, rate, period, isLeapYear(firstYear) );
+    }
+    else
+    {
+        const firstDateLastYear = new Date(lastYear, 0, 1 );
+        var firstPeriod = ( firstDateLastYear.getTime() - firstDate.getTime() ) / millisInDay;
+        var lastPeriod = ( lastDate.getTime() - firstDateLastYear.getTime() ) / millisInDay;
+        return calculatePercentForPeriod( amount, rate, firstPeriod, isLeapYear(firstYear) )
+            + calculatePercentForPeriod( amount, rate, lastPeriod, isLeapYear(lastYear) );
+    }
+
 }
 
 function calculatePercent( amount, rate )
 {
     return Math.round( amount * rate * 100 ) / 100;
+}
+
+function isLeapYear( year )
+{
+    return year % 4 == 0;
 }

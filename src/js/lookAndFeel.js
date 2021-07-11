@@ -127,11 +127,30 @@ function computeAndShowCredit()
 {
     readControls();
     var months = getNormalSum( document.getElementById( "months" ).value );
+    amount += calculateInsurance();
     var annuity = calculateMonthAnnuity( amount, normalRate, months, false );
 
     document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
 
     computeAndShowCommon( annuity, months );
+}
+
+function calculateInsurance()
+{
+    var percentLimit = 99;
+
+    var interestReduceSum;
+    var insurancePercent = getNormalSum( readControlValueSafe( "insurance", "0" ) );
+    var insuranceSum;
+    if( insurancePercent > percentLimit )
+    {
+        insuranceSum = insurancePercent;
+    }
+    else
+    {
+        insuranceSum = calculatePercent( amount, insurancePercent / 100 );
+    }
+    return insuranceSum;
 }
 
 function computeAndShowCard()
@@ -199,17 +218,7 @@ function computeAndShowCommon( annuity, months )
     {
         interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
     }
-    var insurancePercent = getNormalSum( readControlValueSafe( "insurance", "0" ) );
-    var insuranceSum;
-    if( insurancePercent > percentLimit )
-    {
-        insuranceSum = insurancePercent;
-    }
-    else
-    {
-        insuranceSum = calculatePercent( amount, insurancePercent / 100 );
-    }
-    amount += insuranceSum;
+    var insuranceSum = calculateInsurance();
 
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
     //noinspection JSUnusedLocalSymbols

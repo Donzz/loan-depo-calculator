@@ -6,6 +6,8 @@ var amount;
 var rate;
 var normalRate;
 var interestReduceSumPercent;
+var interestReduceSum;
+var insuranceSum;
 var loanStartDate;
 var firstPaymentDate;
 var check = false;
@@ -127,7 +129,8 @@ function computeAndShowCredit()
 {
     readControls();
     var months = getNormalSum( document.getElementById( "months" ).value );
-    amount += calculateInsurance();
+    calculateInsurance();
+    amount += insuranceSum;
     var annuity = calculateMonthAnnuity( amount, normalRate, months, false );
 
     document.getElementById( "annuity" ).innerHTML = "\<b>Аннуитетный платеж: \</b>" + getFormattedSum( annuity );
@@ -139,9 +142,7 @@ function calculateInsurance()
 {
     var percentLimit = 99;
 
-    var interestReduceSum;
     var insurancePercent = getNormalSum( readControlValueSafe( "insurance", "0" ) );
-    var insuranceSum;
     if( insurancePercent > percentLimit )
     {
         insuranceSum = insurancePercent;
@@ -150,7 +151,16 @@ function calculateInsurance()
     {
         insuranceSum = calculatePercent( amount, insurancePercent / 100 );
     }
-    return insuranceSum;
+
+    if( interestReduceSumPercent > percentLimit )
+    {
+        interestReduceSum = interestReduceSumPercent;
+    }
+    else
+    {
+        interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
+    }
+
 }
 
 function computeAndShowCard()
@@ -158,6 +168,8 @@ function computeAndShowCard()
     readControls();
     var months = 0;
     var annuity = getNormalSum( document.getElementById( "minPayment" ).value );
+    calculateInsurance();
+    amount += insuranceSum;
     var minRealPayment = calculatePercentForDates( amount, normalRate, loanStartDate, firstPaymentDate );
     if( annuity < minRealPayment )
     {
@@ -207,19 +219,6 @@ function getNormalRate(locRate)
 
 function computeAndShowCommon( annuity, months )
 {
-    var percentLimit = 99;
-
-    var interestReduceSum;
-    if( interestReduceSumPercent > percentLimit )
-    {
-        interestReduceSum = interestReduceSumPercent;
-    }
-    else
-    {
-        interestReduceSum = calculatePercent( amount, interestReduceSumPercent / 100 );
-    }
-    var insuranceSum = calculateInsurance();
-
 //    var isRounded = document.getElementById( "isRoundedAnnuity" ).checked;
     //noinspection JSUnusedLocalSymbols
     var isRounded = false;

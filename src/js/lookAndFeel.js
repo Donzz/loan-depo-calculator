@@ -1,6 +1,5 @@
 //Created by Kirill Danilov
 //2017
-//Contact the author if want to use
 
 var amount;
 var rate;

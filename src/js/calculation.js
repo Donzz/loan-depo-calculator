@@ -39,6 +39,7 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
     var rowNumber;
     var curEr = er.slice();
     var isEr;
+	var additionalPercentFromEr = 0;
     for( var i = 1; curAmount > 0; i++ )
     {
         curPayment = 0;
@@ -50,7 +51,8 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
             curPaymentDate = curEr[0].date;
             curPayment += curEr[0].sum;
         }
-        curPercent = calculatePercentForDates( curAmount, rate, lastPaymentDate, curPaymentDate );
+        curPercent = calculatePercentForDates( curAmount, rate, lastPaymentDate, curPaymentDate ) + additionalPercentFromEr;
+		additionalPercentFromEr = 0;
 
         if( curPercent > curAnnuity )
         {
@@ -81,6 +83,13 @@ function createInstalment( amount, annuity, rate, loanStartDate, firstPaymentDat
         {
             i--;
             rowNumber = '-';
+    	    if( curPercent > curPayment )
+	        {
+				additionalPercentFromEr = curPercent - curPayment;
+        	    //for credits with early repayment lower than calculated percents
+    	        curPercent = curPayment;
+	        }
+
         }
         curLoan = Math.round( ( curPayment - curPercent ) * 100 ) / 100;
         if( curAmount - curLoan < 0 )
